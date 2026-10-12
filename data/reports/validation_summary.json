@@ -1,0 +1,947 @@
+{
+  "schema_version": 1,
+  "pipeline_version": "2.0.0",
+  "generated_at": "2026-10-12T12:41:32+00:00",
+  "overall_status": "PASS_WITH_WARNINGS",
+  "ready_for_phase_3": true,
+  "study_period": {
+    "start": "2019-01-01",
+    "end": "2025-12-31"
+  },
+  "common_period": {
+    "first": "2019-01-02",
+    "last": "2025-12-31",
+    "price_dates": 1690,
+    "return_observations": 1689,
+    "session_coverage": 0.976878612716763
+  },
+  "critical_failures": [],
+  "warnings": [
+    "MM: extreme_returns: 1 return(s) beyond +/-15% flagged for investigation (retained)",
+    "GSEC: expected_non_valuation_days: 36 NSE session(s) without an observation on documented non-valuation days {'RBI Mumbai bank holiday': 33, 'weekend special NSE session': 3}; these dates drop out of the common sample",
+    "GSEC: off_calendar_dates: 4 observation date(s) not in the reference NSE calendar (dropped by common-date alignment)",
+    "GOLD: source_errors: 2 record(s) deviate >20% from GOLD_NAV and were excluded: 2019-12-19 (0.3355 vs ref 33.5323), 2019-12-20 (0.3365 vs ref 33.5864)",
+    "GOLD: record_exclusions: Excluded records: {'source_error': 2}",
+    "GOLD: session_coverage: 1727/1730 expected sessions (99.83%); missing 3",
+    "NIFTY50: session_coverage: 1727/1730 expected sessions (99.83%); missing 3",
+    "NIFTY50: extreme_returns: 1 return(s) beyond +/-10% flagged for investigation (retained)",
+    "RF_TBILL_91D: record_exclusions: Excluded records: {'missing_value': 3}",
+    "RF_TBILL_91D: auction_gaps: Longest gap 22 days; 5 gap(s) over 8 days",
+    "RF_TBILL_91D: auctions_without_yield: No implicit yield published (e.g. all bids rejected): 2023-03-29, 2025-02-20",
+    "GSEC_EXCHANGE: session_coverage: 1595/1730 expected sessions (92.20%); missing 135",
+    "GSEC_EXCHANGE: longest_gap: Longest run of missing sessions: 109 (from 2019-01-07)",
+    "GSEC_EXCHANGE: extreme_returns: 8 return(s) beyond +/-3% flagged for investigation (retained)",
+    "GOLD_NAV: expected_non_valuation_days: 6 NSE session(s) without an observation on documented non-valuation days {'weekend special NSE session': 2, 'RBI Mumbai bank holiday': 4}; these dates drop out of the common sample",
+    "GOLD_NAV: off_calendar_dates: 5 observation date(s) not in the reference NSE calendar (dropped by common-date alignment)",
+    "GOLD_NAV: extreme_returns: 1 return(s) beyond +/-6% flagged for investigation (retained)",
+    "alignment: 38 aligned return(s) span more than one reference session because a date was missing in at least one series",
+    "calendar: probable NSE sessions absent from every Yahoo series: 2019-02-13, 2019-03-29"
+  ],
+  "known_limitations": [
+    "GOLD: Records deviating from the split-adjusted AMFI NAV by more than the source-error threshold are excluded as source errors (not repaired).",
+    "GSEC: Investors trading on NSE transact at market prices that can deviate from NAV.",
+    "GSEC: NAV is used instead of the NSE price because LTGILTBEES exchange trading is too illiquid for daily returns (see GSEC_EXCHANGE cross-check).",
+    "HDFCBANK: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "HDFCBANK: No independent secondary source: NSE blocks automated access (HTTP 403).",
+    "HINDUNILVR: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "HINDUNILVR: No independent secondary source: NSE blocks automated access (HTTP 403).",
+    "MM: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "MM: No independent secondary source: NSE blocks automated access (HTTP 403).",
+    "NIFTY50: Preferred source (NSE / NSE Indices) is not accessible to automated clients; Yahoo Finance is used instead.",
+    "NIFTY50: Price index, not the NIFTY 50 Total Return Index: the benchmark excludes dividends while equity returns include them (adjusted close).",
+    "RBI_HOLIDAYS_MUMBAI: Bank holidays are evidence for missing debt-fund NAVs, not an NSE trading calendar (NSE's own holiday circulars are not accessible to automated clients).",
+    "RELIANCE: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "RELIANCE: No independent secondary source: NSE blocks automated access (HTTP 403).",
+    "RF_TBILL_91D: Each Handbook edition covers about one fiscal year; editions are combined.",
+    "RF_TBILL_91D: Weekly primary-auction yields, not a daily secondary-market yield.",
+    "SUNPHARMA: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "SUNPHARMA: No independent secondary source: NSE blocks automated access (HTTP 403).",
+    "TCS: Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+    "TCS: No independent secondary source: NSE blocks automated access (HTTP 403)."
+  ],
+  "calendar_findings": {
+    "probable_missing_sessions": [
+      "2019-02-13",
+      "2019-03-29"
+    ],
+    "evidence": "weekday, not an RBI Mumbai holiday, AMFI NAV published"
+  },
+  "thresholds": {
+    "min_session_coverage": 0.98,
+    "max_missing_session_run": 5,
+    "boundary_tolerance_days": 7,
+    "discontinuity_return": 0.5,
+    "source_error_deviation": 0.2,
+    "rf_gap_warning_days": 8,
+    "rf_gap_failure_days": 35,
+    "rf_min_yield_pct": 0.0,
+    "rf_max_yield_pct": 20.0,
+    "rf_price_yield_tolerance_pp": 0.05,
+    "rf_tenor_days": 91,
+    "rf_day_count_basis": 365,
+    "rf_lookback_days": 31,
+    "min_common_session_coverage": 0.95
+  },
+  "datasets": {
+    "MM": {
+      "name": "Mahindra & Mahindra",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "M&M.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Mahindra & Mahindra Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "warn",
+          "detail": "1 return(s) beyond +/-15% flagged for investigation (retained)"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "HDFCBANK": {
+      "name": "HDFC Bank",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "HDFCBANK.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'HDFC Bank Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-15%"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "TCS": {
+      "name": "Tata Consultancy Services",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "TCS.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Tata Consultancy Services Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-15%"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "RELIANCE": {
+      "name": "Reliance Industries",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "RELIANCE.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Reliance Industries Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-15%"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "HINDUNILVR": {
+      "name": "Hindustan Unilever",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "HINDUNILVR.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Hindustan Unilever Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-15%"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "SUNPHARMA": {
+      "name": "Sun Pharmaceutical Industries",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "SUNPHARMA.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per share (adjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1730,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Sun Pharmaceutical Industries Limited'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1730/1730 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-15%"
+        }
+      ],
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    "GSEC": {
+      "name": "Nippon India ETF Nifty 8-13 yr G-Sec Long Term Gilt",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "AMFI (Association of Mutual Funds in India) NAV history",
+      "identifier": "139496",
+      "frequency": "daily (AMFI NAV business days)",
+      "units": "INR per unit (NAV)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1698,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "cross_source",
+          "status": "pass",
+          "detail": "vs GSEC_EXCHANGE: median |dev| 0.137%, p95 0.621%, return corr 0.338"
+        },
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Scheme 139496, ISIN INF204KB1882"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1694/1694 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "expected_non_valuation_days",
+          "status": "warn",
+          "detail": "36 NSE session(s) without an observation on documented non-valuation days {'RBI Mumbai bank holiday': 33, 'weekend special NSE session': 3}; these dates drop out of the common sample"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "off_calendar_dates",
+          "status": "warn",
+          "detail": "4 observation date(s) not in the reference NSE calendar (dropped by common-date alignment)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-3%"
+        }
+      ],
+      "known_limitations": [
+        "NAV is used instead of the NSE price because LTGILTBEES exchange trading is too illiquid for daily returns (see GSEC_EXCHANGE cross-check).",
+        "Investors trading on NSE transact at market prices that can deviate from NAV."
+      ]
+    },
+    "GOLD": {
+      "name": "Nippon India ETF Gold BeES",
+      "role": "portfolio_asset",
+      "critical": true,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "GOLDBEES.NS",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "INR per unit (split-adjusted exchange price)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1727,
+      "session_coverage": 0.9982658959537573,
+      "checks": [
+        {
+          "name": "source_errors",
+          "status": "warn",
+          "detail": "2 record(s) deviate >20% from GOLD_NAV and were excluded: 2019-12-19 (0.3355 vs ref 33.5323), 2019-12-20 (0.3365 vs ref 33.5864)"
+        },
+        {
+          "name": "cross_source",
+          "status": "pass",
+          "detail": "vs GOLD_NAV: median |dev| 0.277%, p95 2.057%, return corr 0.881"
+        },
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Nippon India ETF Gold BeES'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "warn",
+          "detail": "Excluded records: {'source_error': 2}"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "warn",
+          "detail": "1727/1730 expected sessions (99.83%); missing 3"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 2 (from 2019-12-19)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "pass",
+          "detail": "None beyond +/-6%"
+        }
+      ],
+      "known_limitations": [
+        "Records deviating from the split-adjusted AMFI NAV by more than the source-error threshold are excluded as source errors (not repaired)."
+      ]
+    },
+    "NIFTY50": {
+      "name": "NIFTY 50",
+      "role": "benchmark",
+      "critical": true,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "^NSEI",
+      "frequency": "daily (NSE trading sessions)",
+      "units": "index points (price index)",
+      "first_date": "2019-01-02",
+      "last_date": "2025-12-31",
+      "observations": 1727,
+      "session_coverage": 0.9982658959537573,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'NIFTY 50'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-02 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "warn",
+          "detail": "1727/1730 expected sessions (99.83%); missing 3"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 1 (from 2019-01-01)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "warn",
+          "detail": "1 return(s) beyond +/-10% flagged for investigation (retained)"
+        }
+      ],
+      "known_limitations": [
+        "Price index, not the NIFTY 50 Total Return Index: the benchmark excludes dividends while equity returns include them (adjusted close).",
+        "Preferred source (NSE / NSE Indices) is not accessible to automated clients; Yahoo Finance is used instead."
+      ]
+    },
+    "RF_TBILL_91D": {
+      "name": "91-Day Government of India Treasury Bill - implicit yield at cut-off price",
+      "role": "risk_free",
+      "critical": true,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "Reserve Bank of India, Handbook of Statistics on Indian Economy",
+      "identifier": "Auctions of 91-Day Government of India Treasury Bills",
+      "frequency": "weekly (primary auctions)",
+      "units": "percent per annum, actual/365, primary-auction implicit yield",
+      "first_date": "2019-01-02",
+      "last_date": "2025-12-24",
+      "observations": 360,
+      "session_coverage": null,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "8 edition page(s) titled 'Auctions of 91-Day Government of India Treasury Bills'"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "warn",
+          "detail": "Excluded records: {'missing_value': 3}"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "35 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "Auctions 2018-12-05 .. 2025-12-24 (needs one on/before 2019-01-01 and through 2025-12-31)"
+        },
+        {
+          "name": "frequency",
+          "status": "pass",
+          "detail": "Median gap between auctions 7 days (expected weekly)"
+        },
+        {
+          "name": "auction_gaps",
+          "status": "warn",
+          "detail": "Longest gap 22 days; 5 gap(s) over 8 days"
+        },
+        {
+          "name": "units",
+          "status": "pass",
+          "detail": "Median value 5.5091: consistent with an annual yield in percent"
+        },
+        {
+          "name": "price_yield_consistency",
+          "status": "pass",
+          "detail": "Reported vs price-implied yield: max 0.0206 pp, 0 above 0.05 pp"
+        },
+        {
+          "name": "auctions_without_yield",
+          "status": "warn",
+          "detail": "No implicit yield published (e.g. all bids rejected): 2023-03-29, 2025-02-20"
+        },
+        {
+          "name": "edition_revisions",
+          "status": "pass",
+          "detail": "35 overlapping auction(s) identical across editions"
+        }
+      ],
+      "known_limitations": [
+        "Weekly primary-auction yields, not a daily secondary-market yield.",
+        "Each Handbook edition covers about one fiscal year; editions are combined."
+      ]
+    },
+    "GSEC_EXCHANGE": {
+      "name": "LTGILTBEES NSE exchange price (cross-check)",
+      "role": "cross_check",
+      "critical": false,
+      "status": "FAIL",
+      "retrieval_status": "cached",
+      "source": "Yahoo Finance (chart API via yfinance)",
+      "identifier": "LTGILTBEES.NS",
+      "frequency": "daily (NSE sessions with trades)",
+      "units": "INR per unit (exchange close)",
+      "first_date": "2019-01-04",
+      "last_date": "2025-12-31",
+      "observations": 1595,
+      "session_coverage": 0.9219653179190751,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Source reports 'Nippon India Mutual Fund - Nippon India ETF Nifty 8-13 yr G-Sec Long Term Gilt'"
+        },
+        {
+          "name": "currency",
+          "status": "pass",
+          "detail": "INR"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-04 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "fail",
+          "detail": "1595/1730 expected sessions (92.20%); missing 135"
+        },
+        {
+          "name": "longest_gap",
+          "status": "fail",
+          "detail": "Longest run of missing sessions: 109 (from 2019-01-07)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "warn",
+          "detail": "8 return(s) beyond +/-3% flagged for investigation (retained)"
+        }
+      ],
+      "known_limitations": []
+    },
+    "GOLD_NAV": {
+      "name": "Nippon India ETF Gold BeES NAV (cross-check)",
+      "role": "cross_check",
+      "critical": false,
+      "status": "PASS_WITH_WARNINGS",
+      "retrieval_status": "cached",
+      "source": "AMFI (Association of Mutual Funds in India) NAV history",
+      "identifier": "140088",
+      "frequency": "daily (AMFI NAV business days)",
+      "units": "INR per unit (NAV, unadjusted)",
+      "first_date": "2019-01-01",
+      "last_date": "2025-12-31",
+      "observations": 1729,
+      "session_coverage": 1.0,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "Scheme 140088, ISIN INF204KB17I5"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "corporate_actions",
+          "status": "pass",
+          "detail": "Unadjusted source expressed in post-action units for validation: unit_split 1:100 from 2019-12-23"
+        },
+        {
+          "name": "period_boundaries",
+          "status": "pass",
+          "detail": "2019-01-01 .. 2025-12-31 vs sessions 2019-01-01 .. 2025-12-31"
+        },
+        {
+          "name": "session_coverage",
+          "status": "pass",
+          "detail": "1724/1724 expected sessions (100.00%); missing 0"
+        },
+        {
+          "name": "expected_non_valuation_days",
+          "status": "warn",
+          "detail": "6 NSE session(s) without an observation on documented non-valuation days {'weekend special NSE session': 2, 'RBI Mumbai bank holiday': 4}; these dates drop out of the common sample"
+        },
+        {
+          "name": "longest_gap",
+          "status": "pass",
+          "detail": "Longest run of missing sessions: 0 (from None)"
+        },
+        {
+          "name": "off_calendar_dates",
+          "status": "warn",
+          "detail": "5 observation date(s) not in the reference NSE calendar (dropped by common-date alignment)"
+        },
+        {
+          "name": "discontinuities",
+          "status": "pass",
+          "detail": "No return beyond +/-50%"
+        },
+        {
+          "name": "extreme_returns",
+          "status": "warn",
+          "detail": "1 return(s) beyond +/-6% flagged for investigation (retained)"
+        }
+      ],
+      "known_limitations": []
+    },
+    "RBI_HOLIDAYS_MUMBAI": {
+      "name": "RBI holiday list - Mumbai regional office",
+      "role": "calendar_reference",
+      "critical": false,
+      "status": "PASS",
+      "retrieval_status": "cached",
+      "source": "Reserve Bank of India, Holiday Matrix",
+      "identifier": "Mumbai (regional office 28)",
+      "frequency": "annual list",
+      "units": "dates",
+      "first_date": "2019-01-26",
+      "last_date": "2025-12-25",
+      "observations": 153,
+      "session_coverage": null,
+      "checks": [
+        {
+          "name": "identity",
+          "status": "pass",
+          "detail": "7 yearly page(s) for 'Mumbai regional office'"
+        },
+        {
+          "name": "record_exclusions",
+          "status": "pass",
+          "detail": "No invalid records excluded"
+        },
+        {
+          "name": "duplicate_dates",
+          "status": "pass",
+          "detail": "0 repeated date(s), 0 conflicting"
+        },
+        {
+          "name": "coverage",
+          "status": "pass",
+          "detail": "Holidays per year {2019: 24, 2020: 21, 2021: 23, 2022: 19, 2023: 23, 2024: 24, 2025: 19}"
+        }
+      ],
+      "known_limitations": [
+        "Bank holidays are evidence for missing debt-fund NAVs, not an NSE trading calendar (NSE's own holiday circulars are not accessible to automated clients)."
+      ]
+    }
+  }
+}

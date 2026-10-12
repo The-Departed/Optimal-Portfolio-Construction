@@ -1,0 +1,712 @@
+{
+  "schema_version": 1,
+  "pipeline_version": "2.0.0",
+  "generated_at": "2026-10-12T12:41:32+00:00",
+  "datasets": [
+    {
+      "dataset_id": "MM",
+      "name": "Mahindra & Mahindra",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "Automobile",
+      "identifier": "M&M.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/M&M.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:31+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "1996-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Mahindra & Mahindra Limited",
+        "shortName": "MAHINDRA & MAHINDRA LTD",
+        "symbol": "M&M.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/MM/20261012T122631Z",
+        "interim": "data/interim/prices/MM.csv",
+        "processed": "data/processed/prices/MM.csv",
+        "processed_returns": "data/processed/returns/MM.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "HDFCBANK",
+      "name": "HDFC Bank",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "Banking",
+      "identifier": "HDFCBANK.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/HDFCBANK.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:32+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "1996-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "HDFC Bank Limited",
+        "shortName": "HDFC BANK LTD",
+        "symbol": "HDFCBANK.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/HDFCBANK/20261012T122632Z",
+        "interim": "data/interim/prices/HDFCBANK.csv",
+        "processed": "data/processed/prices/HDFCBANK.csv",
+        "processed_returns": "data/processed/returns/HDFCBANK.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "TCS",
+      "name": "Tata Consultancy Services",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "IT services",
+      "identifier": "TCS.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/TCS.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:34+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "2002-08-12 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Tata Consultancy Services Limited",
+        "shortName": "TATA CONSULTANCY SERV LT",
+        "symbol": "TCS.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/TCS/20261012T122634Z",
+        "interim": "data/interim/prices/TCS.csv",
+        "processed": "data/processed/prices/TCS.csv",
+        "processed_returns": "data/processed/returns/TCS.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "RELIANCE",
+      "name": "Reliance Industries",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "Diversified business",
+      "identifier": "RELIANCE.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/RELIANCE.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:36+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "1996-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Reliance Industries Limited",
+        "shortName": "RELIANCE INDUSTRIES LTD",
+        "symbol": "RELIANCE.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/RELIANCE/20261012T122636Z",
+        "interim": "data/interim/prices/RELIANCE.csv",
+        "processed": "data/processed/prices/RELIANCE.csv",
+        "processed_returns": "data/processed/returns/RELIANCE.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "HINDUNILVR",
+      "name": "Hindustan Unilever",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "FMCG",
+      "identifier": "HINDUNILVR.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/HINDUNILVR.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:38+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "1996-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Hindustan Unilever Limited",
+        "shortName": "HINDUSTAN UNILEVER LTD.",
+        "symbol": "HINDUNILVR.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/HINDUNILVR/20261012T122638Z",
+        "interim": "data/interim/prices/HINDUNILVR.csv",
+        "processed": "data/processed/prices/HINDUNILVR.csv",
+        "processed_returns": "data/processed/returns/HINDUNILVR.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "SUNPHARMA",
+      "name": "Sun Pharmaceutical Industries",
+      "role": "portfolio_asset",
+      "asset_class": "equity",
+      "sector": "Pharmaceuticals",
+      "identifier": "SUNPHARMA.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/SUNPHARMA.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:26:39+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per share (adjusted)",
+      "corporate_action_adjustment": "Yahoo 'Adj Close': back-adjusted for splits/bonus issues and cash dividends. 'Close' is split-adjusted only. Levels depend on the download date; returns do not.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "1996-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Sun Pharmaceutical Industries Limited",
+        "shortName": "SUN PHARMACEUTICAL IND L",
+        "symbol": "SUNPHARMA.NS"
+      },
+      "files": {
+        "raw": "data/raw/equities/SUNPHARMA/20261012T122639Z",
+        "interim": "data/interim/prices/SUNPHARMA.csv",
+        "processed": "data/processed/prices/SUNPHARMA.csv",
+        "processed_returns": "data/processed/returns/SUNPHARMA.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Adjusted-close levels are rescaled whenever later dividends occur, so absolute levels differ between download dates; daily returns are unaffected.",
+        "No independent secondary source: NSE blocks automated access (HTTP 403)."
+      ]
+    },
+    {
+      "dataset_id": "GSEC",
+      "name": "Nippon India ETF Nifty 8-13 yr G-Sec Long Term Gilt",
+      "role": "portfolio_asset",
+      "asset_class": "government_bond",
+      "sector": "Sovereign debt",
+      "identifier": "139496",
+      "identifier_details": {
+        "mf": "21",
+        "isin": "INF204KB1882",
+        "nse_symbol": "LTGILTBEES"
+      },
+      "source_name": "AMFI (Association of Mutual Funds in India) NAV history",
+      "source_url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:27:25+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (AMFI NAV business days)",
+      "selected_field": "Net Asset Value",
+      "value_kind": "nav",
+      "currency": "INR",
+      "units": "INR per unit (NAV)",
+      "corporate_action_adjustment": "NAV is a total-return measure net of fund expenses (growth ETF, no distributions); no corporate actions in the study period.",
+      "corporate_actions": [],
+      "source_reported": null,
+      "files": {
+        "raw": "data/raw/bonds/GSEC/20261012T122725Z",
+        "interim": "data/interim/prices/GSEC.csv",
+        "processed": "data/processed/prices/GSEC.csv",
+        "processed_returns": "data/processed/returns/GSEC.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": [
+        "NAV is used instead of the NSE price because LTGILTBEES exchange trading is too illiquid for daily returns (see GSEC_EXCHANGE cross-check).",
+        "Investors trading on NSE transact at market prices that can deviate from NAV."
+      ]
+    },
+    {
+      "dataset_id": "GOLD",
+      "name": "Nippon India ETF Gold BeES",
+      "role": "portfolio_asset",
+      "asset_class": "gold",
+      "sector": "Precious metals",
+      "identifier": "GOLDBEES.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/GOLDBEES.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:27:26+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Adj Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per unit (split-adjusted exchange price)",
+      "corporate_action_adjustment": "Yahoo back-adjusts pre-split prices for the 2019 1:100 unit split. No distributions. 1:100 unit split (face value Rs 100 -> Rs 1). Exchange ex-date 2019-12-19 (NSE circular, record date 2019-12-20); AMFI NAV per unit changes from 2019-12-23.",
+      "corporate_actions": [
+        {
+          "kind": "unit_split",
+          "effective_date": "2019-12-19",
+          "ratio": 100.0,
+          "description": "1:100 unit split (face value Rs 100 -> Rs 1). Exchange ex-date 2019-12-19 (NSE circular, record date 2019-12-20); AMFI NAV per unit changes from 2019-12-23."
+        }
+      ],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "2009-01-01 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Nippon India ETF Gold BeES",
+        "shortName": "NIP IND ETF GOLD BEES",
+        "symbol": "GOLDBEES.NS"
+      },
+      "files": {
+        "raw": "data/raw/gold/GOLD/20261012T122726Z",
+        "interim": "data/interim/prices/GOLD.csv",
+        "processed": "data/processed/prices/GOLD.csv",
+        "processed_returns": "data/processed/returns/GOLD.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": [
+        "Records deviating from the split-adjusted AMFI NAV by more than the source-error threshold are excluded as source errors (not repaired)."
+      ]
+    },
+    {
+      "dataset_id": "NIFTY50",
+      "name": "NIFTY 50",
+      "role": "benchmark",
+      "asset_class": "equity_index",
+      "sector": null,
+      "identifier": "^NSEI",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/%5ENSEI/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:27:28+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-02",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE trading sessions)",
+      "selected_field": "Close",
+      "value_kind": "index_level",
+      "currency": "INR",
+      "units": "index points (price index)",
+      "corporate_action_adjustment": "Price-return index: excludes dividends. 'Adj Close' equals 'Close'.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "2007-09-17 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "INDEX",
+        "longName": "NIFTY 50",
+        "shortName": "NIFTY 50",
+        "symbol": "^NSEI"
+      },
+      "files": {
+        "raw": "data/raw/benchmark/NIFTY50/20261012T122728Z",
+        "interim": "data/interim/prices/NIFTY50.csv",
+        "processed": "data/processed/prices/NIFTY50.csv",
+        "processed_returns": "data/processed/returns/NIFTY50.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": [
+        "Price index, not the NIFTY 50 Total Return Index: the benchmark excludes dividends while equity returns include them (adjusted close).",
+        "Preferred source (NSE / NSE Indices) is not accessible to automated clients; Yahoo Finance is used instead."
+      ]
+    },
+    {
+      "dataset_id": "RF_TBILL_91D",
+      "name": "91-Day Government of India Treasury Bill - implicit yield at cut-off price",
+      "role": "risk_free",
+      "asset_class": "risk_free_rate",
+      "sector": null,
+      "identifier": "Auctions of 91-Day Government of India Treasury Bills",
+      "identifier_details": {
+        "edition_years": "2019,2020,2021,2022,2023,2024,2025,2026"
+      },
+      "source_name": "Reserve Bank of India, Handbook of Statistics on Indian Economy",
+      "source_url": "https://www.rbi.org.in/Scripts/AnnualPublications.aspx?head=Handbook+of+Statistics+on+Indian+Economy",
+      "source_pages": [
+        {
+          "edition_year": "2019",
+          "page_id": "19204",
+          "table": "Table 213 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=19204"
+        },
+        {
+          "edition_year": "2020",
+          "page_id": "19946",
+          "table": "Table 213 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=19946"
+        },
+        {
+          "edition_year": "2021",
+          "page_id": "20615",
+          "table": "Table 210 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=20615"
+        },
+        {
+          "edition_year": "2022",
+          "page_id": "21307",
+          "table": "Table 210 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=21307"
+        },
+        {
+          "edition_year": "2023",
+          "page_id": "22019",
+          "table": "Table 213 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=22019"
+        },
+        {
+          "edition_year": "2024",
+          "page_id": "22687",
+          "table": "Table 213 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=22687"
+        },
+        {
+          "edition_year": "2025",
+          "page_id": "23391",
+          "table": "Table 217 :  Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=23391"
+        },
+        {
+          "edition_year": "2026",
+          "page_id": "24043",
+          "table": "Table 218 : Auctions of 91-Day Government of India Treasury Bills",
+          "url": "https://www.rbi.org.in/Scripts/PublicationsView.aspx?id=24043"
+        }
+      ],
+      "retrieved_at": "2026-10-12T12:28:05+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-02",
+        "end": "2025-12-24"
+      },
+      "frequency": "weekly (primary auctions)",
+      "selected_field": "Implicit Yield at Cut-off Price (percent)",
+      "value_kind": "yield",
+      "currency": null,
+      "units": "percent per annum, actual/365, primary-auction implicit yield",
+      "corporate_action_adjustment": "Not applicable (rate series).",
+      "corporate_actions": [],
+      "source_reported": null,
+      "files": {
+        "raw": "data/raw/risk_free/RF_TBILL_91D/20261012T122805Z",
+        "interim": "data/interim/risk_free/RF_TBILL_91D.csv",
+        "processed": "data/processed/risk_free/RF_TBILL_91D.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": [
+        "Weekly primary-auction yields, not a daily secondary-market yield.",
+        "Each Handbook edition covers about one fiscal year; editions are combined."
+      ]
+    },
+    {
+      "dataset_id": "GSEC_EXCHANGE",
+      "name": "LTGILTBEES NSE exchange price (cross-check)",
+      "role": "cross_check",
+      "asset_class": "government_bond",
+      "sector": "Sovereign debt",
+      "identifier": "LTGILTBEES.NS",
+      "identifier_details": {},
+      "source_name": "Yahoo Finance (chart API via yfinance)",
+      "source_url": "https://finance.yahoo.com/quote/LTGILTBEES.NS/history",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:28:07+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-04",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (NSE sessions with trades)",
+      "selected_field": "Close",
+      "value_kind": "price",
+      "currency": "INR",
+      "units": "INR per unit (exchange close)",
+      "corporate_action_adjustment": "No corporate actions.",
+      "corporate_actions": [],
+      "source_reported": {
+        "currency": "INR",
+        "dataGranularity": "1d",
+        "exchangeName": "NSI",
+        "exchangeTimezoneName": "Asia/Kolkata",
+        "firstTradeDate": "2018-05-11 09:15:00+05:30",
+        "fullExchangeName": "NSE",
+        "instrumentType": "EQUITY",
+        "longName": "Nippon India Mutual Fund - Nippon India ETF Nifty 8-13 yr G-Sec Long Term Gilt",
+        "shortName": "NIP IND ETF LONGTERM GILT",
+        "symbol": "LTGILTBEES.NS"
+      },
+      "files": {
+        "raw": "data/raw/bonds/GSEC_EXCHANGE/20261012T122807Z",
+        "interim": "data/interim/prices/GSEC_EXCHANGE.csv"
+      },
+      "validation_status": "FAIL",
+      "known_limitations": []
+    },
+    {
+      "dataset_id": "GOLD_NAV",
+      "name": "Nippon India ETF Gold BeES NAV (cross-check)",
+      "role": "cross_check",
+      "asset_class": "gold",
+      "sector": "Precious metals",
+      "identifier": "140088",
+      "identifier_details": {
+        "mf": "21",
+        "isin": "INF204KB17I5",
+        "nse_symbol": "GOLDBEES"
+      },
+      "source_name": "AMFI (Association of Mutual Funds in India) NAV history",
+      "source_url": "https://portal.amfiindia.com/DownloadNAVHistoryReport_Po.aspx",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:28:07+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "frequency": "daily (AMFI NAV business days)",
+      "selected_field": "Net Asset Value",
+      "value_kind": "nav",
+      "currency": "INR",
+      "units": "INR per unit (NAV, unadjusted)",
+      "corporate_action_adjustment": "Unadjusted NAV; divided by 100 before 2019-12-23 for comparison only.",
+      "corporate_actions": [
+        {
+          "kind": "unit_split",
+          "effective_date": "2019-12-23",
+          "ratio": 100.0,
+          "description": "1:100 unit split (face value Rs 100 -> Rs 1). Exchange ex-date 2019-12-19 (NSE circular, record date 2019-12-20); AMFI NAV per unit changes from 2019-12-23."
+        }
+      ],
+      "source_reported": null,
+      "files": {
+        "raw": "data/raw/gold/GOLD_NAV/20261012T122807Z",
+        "interim": "data/interim/prices/GOLD_NAV.csv"
+      },
+      "validation_status": "PASS_WITH_WARNINGS",
+      "known_limitations": []
+    },
+    {
+      "dataset_id": "RBI_HOLIDAYS_MUMBAI",
+      "name": "RBI holiday list - Mumbai regional office",
+      "role": "calendar_reference",
+      "asset_class": "calendar",
+      "sector": null,
+      "identifier": "Mumbai (regional office 28)",
+      "identifier_details": {
+        "regional_office": "28"
+      },
+      "source_name": "Reserve Bank of India, Holiday Matrix",
+      "source_url": "https://www.rbi.org.in/Scripts/HolidayMatrixDisplay.aspx",
+      "source_pages": null,
+      "retrieved_at": "2026-10-12T12:33:40+00:00",
+      "retrieval_status": "cached",
+      "retrieval_error": null,
+      "requested_range": {
+        "start": "2019-01-01",
+        "end": "2025-12-31"
+      },
+      "actual_range": {
+        "start": "2019-01-26",
+        "end": "2025-12-25"
+      },
+      "frequency": "annual list",
+      "selected_field": "Holiday",
+      "value_kind": "calendar",
+      "currency": null,
+      "units": "dates",
+      "corporate_action_adjustment": "Not applicable.",
+      "corporate_actions": [],
+      "source_reported": null,
+      "files": {
+        "raw": "data/raw/reference/RBI_HOLIDAYS_MUMBAI/20261012T123340Z",
+        "interim": "data/interim/prices/RBI_HOLIDAYS_MUMBAI.csv"
+      },
+      "validation_status": "PASS",
+      "known_limitations": [
+        "Bank holidays are evidence for missing debt-fund NAVs, not an NSE trading calendar (NSE's own holiday circulars are not accessible to automated clients)."
+      ]
+    }
+  ]
+}

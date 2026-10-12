@@ -1,0 +1,14 @@
+dataset_id,records,missing_values_before_cleaning,missing_values_pct,non_numeric,non_finite,invalid_dates,non_positive_or_out_of_range,duplicate_dates,source_errors,excluded_total,valid_records_after_cleaning,missing_values_after_cleaning,missing_sessions_vs_calendar,missing_sessions_pct,notes
+MM,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+HDFCBANK,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+TCS,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+RELIANCE,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+HINDUNILVR,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+SUNPHARMA,1730,0,0.0,0,0,0,0,0,0,0,1730,0,0.0,0.0,
+GSEC,1698,0,0.0,0,0,0,0,0,0,0,1698,0,0.0,0.0,
+GOLD,1729,0,0.0,0,0,0,0,0,2,2,1727,0,3.0,0.1734,source_error=2
+NIFTY50,1727,0,0.0,0,0,0,0,0,0,0,1727,0,3.0,0.1734,
+RF_TBILL_91D,447,3,0.6711,0,0,0,0,35,0,38,409,0,,,duplicate_identical=35; missing_value=3
+GSEC_EXCHANGE,1595,0,0.0,0,0,0,0,0,0,0,1595,0,135.0,7.8035,
+GOLD_NAV,1729,0,0.0,0,0,0,0,0,0,0,1729,0,0.0,0.0,
+RBI_HOLIDAYS_MUMBAI,153,0,0.0,0,0,0,0,0,0,0,153,0,,,
