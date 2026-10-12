@@ -25,7 +25,7 @@ export function DataStatusCard() {
             )}
           </div>
           <p className="text-sm">{data.message}</p>
-          <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
+          <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
             <div>
               <dt className="text-ink-muted">Requested period</dt>
               <dd className="font-medium">
@@ -50,6 +50,12 @@ export function DataStatusCard() {
                         : ""
                     }`
                   : "—"}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-ink-muted">Portfolio assets</dt>
+              <dd className="font-medium">
+                {data.datasets.filter((d) => d.role === "portfolio_asset").length || "—"} + benchmark + risk-free
               </dd>
             </div>
             <div>

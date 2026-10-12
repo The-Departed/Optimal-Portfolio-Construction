@@ -10,7 +10,7 @@ G-Sec ETF, gold ETF) for conservative (min-vol), balanced (max-Sharpe) and growt
 (max-return s.t. user σ_max) profiles. The classical models are the core. Do not
 substitute ML.
 
-**Current phase: 5 complete (CAPM + Monte Carlo; approval items in docs/implementation_plan.md). Work proceeds strictly phase by phase**
+**Status: all 8 phases complete (approval items for Phase 2 source decisions in docs/implementation_plan.md). Work proceeds strictly phase by phase**
 (see `docs/implementation_plan.md`). Do not start a later phase unless asked.
 
 ## Commands
@@ -24,6 +24,7 @@ Backend (run from `backend/`; uv manages Python 3.12 and the venv):
 - `uv run python -m scripts.download_datasets [--refresh|--offline|--strict]`: data pipeline (exit 1 = BLOCKED)
 - `uv run python -m scripts.run_analytics`: persist Phase 3 analytics (run after the pipeline; exit 1 = unavailable or FAILED)
 - `uv run python -m scripts.run_capm` / `uv run python -m scripts.run_simulation [--n-portfolios N --seed S]`: persist Phase 4/5 outputs
+- `uv run python -m scripts.validate_end_to_end`: full workflow on the real data (exit 1 on any failed check)
 - `uv run pytest --run-online tests/online`: optional live-source smoke tests (the default suite is offline)
 
 Frontend (run from `frontend/`):
@@ -35,7 +36,7 @@ Both: `./scripts/dev.sh`
 ## Non-negotiable rules
 
 - **No financial calculations in React.** The frontend only formats and displays backend results (`lib/formatters.ts` is display-only).
-- **Never fabricate data or results.** No sample or placeholder numbers presented as outputs, no fake successful responses. Unimplemented analyses return `NOT_IMPLEMENTED` (501). A missing or invalid dataset returns `DATA_NOT_READY` (503).
+- **Never fabricate data or results.** No sample or placeholder numbers presented as outputs, no fake successful responses. A missing or invalid dataset returns `DATA_NOT_READY` (503); infeasible user constraints return `INFEASIBLE_CONSTRAINT`; solver failures return `OPTIMIZATION_FAILED` and never show weights.
 - **No silent fixes.** Do not forward-fill market prices, relax a user constraint (σ_max), or return an invalid allocation. Report failures with typed errors (`INFEASIBLE_CONSTRAINT`, `OPTIMIZATION_FAILED`).
 - **Canonical asset order** = `backend/app/domain/assets.py::ASSET_IDS`. Every vector, matrix and response follows it.
 - **Units:** decimals everywhere (0.12 = 12%), annualized with T = 252 from settings. Never mix daily returns, annual yields and annualized returns. Follow `docs/methodology.md`.
@@ -47,6 +48,7 @@ Both: `./scripts/dev.sh`
 - Never "fix" a non-PSD covariance matrix; report it via `diagnose()` and ask first.
 - CAPM, Sharpe and simulation inputs come from `app/services/market_inputs.py` only (one risk-free accrual, one `mu`, one Σ). All annualization is arithmetic ×252; Jensen's alpha must equal 252 × intercept.
 - Monte Carlo candidates are "simulation candidates", never "optimal"; the frontier filter is a "Monte Carlo approximation".
+- Optimizer results are "optimal for these estimates" only when SLSQP succeeded AND the feasibility checks passed (`analytics/optimization.py::_clean`). Never return last-attempt weights on failure; never default or relax the growth `max_volatility`.
 
 ## Backend architecture
 
@@ -61,7 +63,7 @@ Both: `./scripts/dev.sh`
 Feature folders `src/features/{dashboard,capm,portfolio}`, each with `api.ts`, `types.ts`, `hooks/`, `components/` and `page.tsx`.
 - HTTP goes through `lib/api-client.ts`, which throws `ApiError` with the backend `code`. Server state uses TanStack Query hooks.
 - TS types mirror backend schemas (`src/types/api.ts`, `features/*/types.ts`). Update both sides together.
-- Gate results UI with `<RequireData>`. Charts use `<ChartFrame>`, which shows an empty state without data.
+- Gate results UI with `<RequireData>`; charts render only backend data (Recharts, lazy-loaded pages).
 - Styling: Tailwind v4 tokens in `src/styles/index.css` (`bg-surface`, `text-ink-muted`, `text-accent`, …), with light and dark modes. Accessible controls come from `radix-ui`.
 - Path alias `@/` → `src/`.
 

@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/api-client";
 import type {
+  FrontierResponse,
   OptimizationRequest,
   OptimizationResponse,
   ProfileDefinition,
@@ -12,4 +13,5 @@ export const portfolioApi = {
   simulate: (body: SimulationRequest) => apiClient.post<SimulationResponse>("/portfolio/simulate", body),
   optimize: (body: OptimizationRequest) =>
     apiClient.post<OptimizationResponse>("/portfolio/optimize", body),
+  frontier: (points = 30) => apiClient.get<FrontierResponse>(`/portfolio/frontier?points=${points}`),
 };

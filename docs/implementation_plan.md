@@ -7,15 +7,15 @@
 | 3 | Financial data and descriptive analytics | **Complete** (analytics PASS_WITH_WARNINGS) |
 | 4 | CAPM equity evaluation | **Complete** |
 | 5 | Monte Carlo portfolio simulation | **Complete** |
-| 6 | Constrained optimization | Not started |
-| 7 | Frontend integration and visualization | Not started |
-| 8 | Validation and final delivery | Not started |
+| 6 | Constrained optimization | **Complete** |
+| 7 | Frontend integration and visualization | **Complete** |
+| 8 | Validation and final delivery | **Complete** |
 
 ## Phase 1 — scaffold (complete)
 
 - FastAPI app factory, settings, logging, typed error model.
 - Endpoints: health, data status (manifest-based), asset registry, profile definitions.
-- Reserved analysis endpoints return `DATA_NOT_READY` (503) or `NOT_IMPLEMENTED` (501), never fabricated values.
+- Analysis endpoints returned `DATA_NOT_READY` (503) or a 'not implemented' error until their phase (no fabricated values); every placeholder has since been replaced.
 - Typed Pydantic schemas for CAPM, simulation and optimization requests/responses.
 - Asset registry with all eight assets plus benchmark and risk-free metadata, all marked unverified.
 - React/TS/Vite/Tailwind shell: Dashboard, CAPM and Portfolio pages with loading, error and empty states. The investor-profile selector shows σ_max for growth only.
@@ -72,7 +72,33 @@
   - Maximum-Sharpe candidate: Sharpe 1.45, 17.93% return, 8.50% volatility.
   - Frontier approximation: 61 portfolios.
 
-## Phases 6–8
+## Phase 6 — constrained optimization (complete)
 
-See the specification. Each phase adds its analytics module(s), service wiring and tests,
-then replaces the corresponding `NOT_IMPLEMENTED` response.
+- `app/analytics/optimization.py` implements the three profiles as convex problems
+  solved with SLSQP, with multi-start, feasibility validation, typed failures and the
+  exact frontier. `app/services/optimization_service.py` builds the comparison with the
+  Monte Carlo candidates.
+- Actual results are in `methodology.md` §8. The optimizer beats or matches the Monte
+  Carlo candidate for every profile.
+
+## Phase 7 — frontend integration (complete)
+
+- Dashboard: readiness, coverage, observations, asset count, the analytics card, and
+  links to all three modules.
+- CAPM: results table, historical-vs-CAPM chart, beta chart with 95% CIs, and a per-equity
+  regression detail view.
+- Portfolio: the Monte Carlo panel; the profile selector with a growth-only σ_max input;
+  results with an allocation chart, weights, solver and constraint status, the Monte
+  Carlo comparison and methodology; the risk-return chart with the exact frontier; and a
+  side-by-side profile comparison.
+- Verified by screenshot at 1440 px and 390 px (no horizontal overflow).
+
+## Phase 8 — validation and delivery (complete)
+
+- Backend `uv run pytest` and frontend `npm test` and `npm run build` pass.
+- `scripts/validate_end_to_end.py` passes 27/27 checks on the real dataset.
+- Reliability review:
+  - the placeholder 501 path and dead schemas were removed
+  - frontend request timeout added
+  - all modules import without cycles
+  - no secrets are in the repository

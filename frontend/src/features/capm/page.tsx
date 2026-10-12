@@ -2,10 +2,12 @@ import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { RequireData } from "@/components/common/RequireData";
+import { BetaChart } from "@/features/capm/components/BetaChart";
 import { CapmMethodology } from "@/features/capm/components/CapmMethodology";
 import { CapmOverview } from "@/features/capm/components/CapmOverview";
 import { CapmReturnChart } from "@/features/capm/components/CapmReturnChart";
 import { CapmTable } from "@/features/capm/components/CapmTable";
+import { EquityDetail } from "@/features/capm/components/EquityDetail";
 import { useCapmSummary } from "@/features/capm/hooks/useCapmSummary";
 
 function CapmContent() {
@@ -16,7 +18,11 @@ function CapmContent() {
     <div className="grid grid-cols-1 gap-6">
       <CapmOverview data={data} />
       <CapmTable data={data} />
-      <CapmReturnChart data={data} />
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <CapmReturnChart data={data} />
+        <BetaChart data={data} />
+      </div>
+      <EquityDetail data={data} />
     </div>
   );
 }

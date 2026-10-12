@@ -81,11 +81,21 @@ def test_analyses_report_data_not_ready(client: TestClient) -> None:
         assert response.json()["code"] == "DATA_NOT_READY"
 
 
-def test_analyses_not_implemented_even_when_data_ready(client: TestClient, write_artifacts) -> None:
+def test_analyses_refuse_ready_manifest_without_processed_files(
+    client: TestClient, write_artifacts
+) -> None:
+    # Phase 6 replaced the Phase 1 "not implemented" placeholder; a manifest that claims
+    # readiness without the processed files must still never yield a result.
     write_artifacts("PASS")
-    response = client.post("/api/v1/portfolio/optimize", json={"profile": "conservative"})
-    assert response.status_code == 501
-    assert response.json()["code"] == "NOT_IMPLEMENTED"
+    for method, url, payload in [
+        ("post", "/api/v1/portfolio/optimize", {"profile": "conservative"}),
+        ("post", "/api/v1/portfolio/simulate", {}),
+        ("get", "/api/v1/capm/summary", None),
+    ]:
+        response = client.request(method, url, json=payload)
+        assert response.status_code == 503, url
+        assert response.json()["code"] == "DATA_NOT_READY"
+        assert "data pipeline" in response.json()["message"]
 
 
 def test_optimize_validation_error_shape(client: TestClient) -> None:

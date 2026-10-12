@@ -16,7 +16,7 @@ export function CapmReturnChart({ data }: { data: CapmSummaryResponse }) {
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={rows} margin={{ left: 0, right: 8, top: 8, bottom: 4 }} barGap={2} barCategoryGap="25%">
             <CartesianGrid vertical={false} stroke="var(--color-grid)" />
-            <XAxis dataKey="id" tick={{ fontSize: 11, fill: "var(--color-ink)" }} tickLine={false} />
+            <XAxis dataKey="id" interval={0} tick={{ fontSize: 10, fill: "var(--color-ink)" }} tickLine={false} />
             <YAxis tickFormatter={(v: number) => formatPercentTick(v)} tick={{ fontSize: 11, fill: "var(--color-ink-muted)" }} axisLine={false} tickLine={false} width={48} />
             <Tooltip
               cursor={{ fill: "var(--color-surface-muted)" }}

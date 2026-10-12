@@ -1,4 +1,4 @@
-import { LineChart, PieChart } from "lucide-react";
+import { BarChart3, LineChart, PieChart } from "lucide-react";
 import { PageHeader } from "@/components/common/PageHeader";
 import { AnalyticsReadinessCard } from "@/features/dashboard/components/AnalyticsReadinessCard";
 import { AssetUniverseTable } from "@/features/dashboard/components/AssetUniverseTable";
@@ -18,7 +18,13 @@ export function DashboardPage() {
         <DataStatusCard />
         <AnalyticsReadinessCard />
         <DatasetQualityTable />
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-6 md:grid-cols-3">
+          <ModuleCard
+            to="/analytics"
+            icon={BarChart3}
+            title="Descriptive analytics"
+            description="Returns, risk statistics, return distributions and the correlation structure of all eight assets."
+          />
           <ModuleCard
             to="/capm"
             icon={LineChart}

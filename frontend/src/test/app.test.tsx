@@ -82,8 +82,8 @@ describe("portfolio page", () => {
       ...baseHandlers,
       "/data/status": () => ({ status: 200, body: dataReady }),
       "/portfolio/optimize": () => ({
-        status: 501,
-        body: { code: "NOT_IMPLEMENTED", message: "Constrained optimization is scheduled for Phase 6.", details: {} },
+        status: 422,
+        body: { code: "OPTIMIZATION_FAILED", message: "The optimizer did not converge to a feasible portfolio.", details: {} },
       }),
     });
     const user = userEvent.setup();
@@ -91,8 +91,9 @@ describe("portfolio page", () => {
     const button = await screen.findByRole("button", { name: /run optimization/i });
     await vi.waitFor(() => expect(button).toBeEnabled());
     await user.click(button);
-    expect(await screen.findByText(/scheduled for Phase 6/)).toBeInTheDocument();
-    expect(screen.getByText("NOT_IMPLEMENTED")).toBeInTheDocument();
+    expect(await screen.findByText(/did not converge to a feasible portfolio/)).toBeInTheDocument();
+    expect(screen.getByText("OPTIMIZATION_FAILED")).toBeInTheDocument();
+    expect(screen.queryByText("Optimal for these estimates")).not.toBeInTheDocument();
   });
 
   it("validates sigma_max before calling the API", async () => {
@@ -108,5 +109,26 @@ describe("portfolio page", () => {
     await user.click(button);
     expect(screen.getByText(/enter a maximum volatility/i)).toBeInTheDocument();
     expect(fetchSpy.mock.calls.some(([u]) => String(u).includes("/optimize"))).toBe(false);
+  });
+});
+
+describe("API client", () => {
+  it("reports a timeout distinctly from a network failure", async () => {
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new DOMException("signal timed out", "TimeoutError"));
+    const { apiClient, ApiError } = await import("@/lib/api-client");
+    await expect(apiClient.get("/health")).rejects.toMatchObject({ code: "TIMEOUT" });
+    await expect(apiClient.get("/health")).rejects.toBeInstanceOf(ApiError);
+  });
+
+  it("maps typed backend errors to ApiError with the backend code", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ code: "INFEASIBLE_CONSTRAINT", message: "too low", details: { minimum_volatility: 0.035 } }), { status: 422 }),
+    );
+    const { apiClient } = await import("@/lib/api-client");
+    await expect(apiClient.post("/portfolio/optimize", {})).rejects.toMatchObject({
+      status: 422,
+      code: "INFEASIBLE_CONSTRAINT",
+      details: { minimum_volatility: 0.035 },
+    });
   });
 });

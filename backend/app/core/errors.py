@@ -29,13 +29,6 @@ class DataNotReadyError(AppError):
     code = ErrorCode.DATA_NOT_READY
 
 
-class AnalysisNotImplementedError(AppError):
-    """The analysis is reserved for a later implementation phase."""
-
-    status_code = status.HTTP_501_NOT_IMPLEMENTED
-    code = ErrorCode.NOT_IMPLEMENTED
-
-
 class InvalidParameterError(AppError):
     """A request parameter is syntactically valid but not acceptable (e.g. unknown asset)."""
 

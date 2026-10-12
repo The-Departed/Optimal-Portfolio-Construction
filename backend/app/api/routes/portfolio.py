@@ -1,11 +1,13 @@
 from dataclasses import asdict
+from typing import Annotated
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
 from app.api.dependencies import PortfolioServiceDep
 from app.domain.profiles import PROFILE_DEFINITIONS
 from app.schemas.common import ErrorResponse
 from app.schemas.portfolio import (
+    FrontierResponse,
     OptimizationRequest,
     OptimizationResponse,
     ProfileDefinitionOut,
@@ -15,11 +17,7 @@ from app.schemas.portfolio import (
 
 router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 
-_ERRORS = {
-    422: {"model": ErrorResponse},
-    501: {"model": ErrorResponse},
-    503: {"model": ErrorResponse},
-}
+_ERRORS = {422: {"model": ErrorResponse}, 503: {"model": ErrorResponse}}
 
 
 @router.get("/profiles", response_model=list[ProfileDefinitionOut])
@@ -35,3 +33,10 @@ def simulate(request: SimulationRequest, service: PortfolioServiceDep) -> Simula
 @router.post("/optimize", response_model=OptimizationResponse, responses=_ERRORS)
 def optimize(request: OptimizationRequest, service: PortfolioServiceDep) -> OptimizationResponse:
     return service.optimize(request)
+
+
+@router.get("/frontier", response_model=FrontierResponse, responses=_ERRORS)
+def frontier(
+    service: PortfolioServiceDep, points: Annotated[int, Query(ge=5, le=100)] = 30
+) -> FrontierResponse:
+    return service.frontier(points)

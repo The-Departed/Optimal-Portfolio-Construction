@@ -1,14 +1,14 @@
-"""Portfolio simulation (Phase 5) and optimization (Phase 6) orchestration."""
+"""Portfolio simulation (Phase 5), optimization and frontier (Phase 6) orchestration."""
 
 from app.core.config import Settings
-from app.core.errors import AnalysisNotImplementedError
 from app.schemas.portfolio import (
+    FrontierResponse,
     OptimizationRequest,
     OptimizationResponse,
     SimulationRequest,
     SimulationResponse,
 )
-from app.services import simulation_service
+from app.services import optimization_service, simulation_service
 from app.services.data_status_service import DataStatusService
 
 
@@ -24,4 +24,8 @@ class PortfolioService:
 
     def optimize(self, request: OptimizationRequest) -> OptimizationResponse:
         self._data_status.require_ready()
-        raise AnalysisNotImplementedError("Constrained optimization is scheduled for Phase 6.")
+        return optimization_service.optimize(self._settings, request)
+
+    def frontier(self, points: int) -> FrontierResponse:
+        self._data_status.require_ready()
+        return optimization_service.frontier(self._settings, points)

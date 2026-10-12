@@ -195,7 +195,7 @@ Code: `app/analytics/monte_carlo.py`, `efficient_frontier.py`,
 - **Monte Carlo frontier approximation:** the non-dominated sampled portfolios. A portfolio
   is kept if no other sampled portfolio has volatility ≤ and return ≥ with one strict
   inequality, using a return tolerance of 1e-12. This is **not** the exact efficient
-  frontier; Phase 6 computes that by constrained optimization.
+  frontier; the exact frontier comes from constrained optimization (§8).
 - **Limitations:**
   - The candidates are the best of a finite sample, not global optima.
   - Uniform sampling rarely reaches corners and edges of the simplex.
@@ -203,32 +203,113 @@ Code: `app/analytics/monte_carlo.py`, `efficient_frontier.py`,
   - The sample covariance is unshrunk.
   - None of these results are forecasts.
 
-## 8. Constrained optimization (Phase 6)
+## 8. Constrained optimization (implemented in Phase 6)
 
-SciPy `minimize(method="SLSQP")` with bounds `[0, 1]` and the equality `Σw = 1`, started
-from equal weights and from additional feasible starts.
+Code: `app/analytics/optimization.py`, `app/services/optimization_service.py`,
+`POST /api/v1/portfolio/optimize`, `GET /api/v1/portfolio/frontier`.
 
-| Profile | Objective | Extra constraint |
+**Inputs.** The inputs are exactly those of the Monte Carlo simulation, from
+`market_inputs`:
+
+- `mu`: arithmetic annualized mean returns
+- `Σ`: annualized sample covariance
+- `R_f`: the accrued risk-free rate, annualized (§4)
+
+Before solving, the service checks that there are 8 finite expected returns, that Σ is
+8×8 in canonical order, symmetric and positive semidefinite, and that `R_f` is finite.
+Invalid inputs return 503 `DATA_NOT_READY`; nothing is repaired. CAPM returns are never
+substituted for `mu`.
+
+**Constraints (all profiles):** `Σ w_i = 1` and `0 ≤ w_i ≤ 1`, with no short selling and
+no leverage.
+
+| Profile | Problem | Formulation solved |
 |---|---|---|
-| Conservative | minimize `sqrt(wᵀ Sigma w)` | none |
-| Balanced | maximize `(wᵀ mu − R_f) / sqrt(wᵀ Sigma w)`, solved as minimizing the negative | guard for `sigma_p < eps` |
-| Growth | maximize `wᵀ mu` | `sqrt(wᵀ Sigma w) ≤ sigma_max` (user input) |
+| Conservative | minimize σ_p | minimize `wᵀΣw` (convex QP; same minimizer as σ_p) |
+| Balanced | maximize `(wᵀmu − R_f)/σ_p` | Convex rescaling: minimize `yᵀΣy` subject to `(mu − R_f)ᵀy = 1`, `y ≥ 0`, then `w = y/Σy`. Cross-checked by maximizing the Sharpe ratio directly from several starts. Guard: Sharpe undefined if `σ_p < 1e-10`. Requires some `mu_i > R_f`. |
+| Growth-oriented | maximize `wᵀmu` subject to `σ_p ≤ σ_max` | Linear objective with the convex constraint `wᵀΣw ≤ σ_max²` |
 
-- **Feasibility (growth):** if `sigma_max` is below the minimum-variance portfolio's
-  volatility, the API returns `INFEASIBLE_CONSTRAINT` together with that minimum. The
-  constraint is never relaxed silently.
-- **Post-solve validation:** the solver must report success, the weights must satisfy the
-  bounds and the sum within `1e-8`, and the volatility constraint must hold within
-  tolerance. Otherwise the API returns `OPTIMIZATION_FAILED`. Sub-tolerance negative
-  round-off is clipped to zero and renormalized. This step is reported, not hidden.
-- **Analytical efficient frontier:** minimize variance over a grid of target returns
-  between the minimum-variance return and `max(mu)`.
-- **Comparison:** each optimizer result is reported next to the best simulated portfolio
-  for the same objective. The optimizer should be at least as good, and the gap is shown.
+**Solver.**
 
-## 9. Planned mathematical tests
+- SciPy `minimize(method="SLSQP")` with analytic gradients, `ftol = 1e-12` and
+  `maxiter = 1000`.
+- Starting portfolios:
+  - equal weights
+  - the matching Monte Carlo candidate
+  - 6 seeded Dirichlet portfolios (seed 20240101)
+  - for growth only, the minimum-volatility solution, which is always feasible
+- Every start is reported (success, accepted, iterations).
 
-Weights sum to one, all weights lie in [0, 1], variance ≥ 0 within tolerance, and the
-variance formula responds correctly to covariance perturbations. CAPM inputs share the
-same frequency. Simulation is reproducible for a fixed seed. Optimizer outputs satisfy
-all constraints, and infeasible or failed optimizations are reported explicitly.
+**Validation.** A start's solution is accepted only if all of the following hold:
+
+- SciPy reports success.
+- The raw weights satisfy `|Σw − 1| ≤ 1e-8` and `−1e-8 ≤ w_i ≤ 1 + 1e-8`.
+- For growth, `σ_p ≤ σ_max + 1e-8`.
+
+Accepted weights are then clipped to [0, 1] and renormalized; this only removes
+round-off, and the raw residuals are reported. Among accepted starts the best objective
+wins. If none is accepted, the API returns 422 `OPTIMIZATION_FAILED` and never shows the
+last attempted weights. Because each problem is convex, a converged and feasible solution
+is a global optimum *for these estimates*, within solver tolerance.
+
+**Growth feasibility.**
+
+- `σ_max` must be supplied by the user. It must be finite, positive and below 500%;
+  there is no default and no silent relaxation.
+- If `σ_max` is below the minimum achievable volatility (3.55% on the actual data), the
+  API returns 422 `INFEASIBLE_CONSTRAINT` with that minimum.
+- When the limit binds, the solution sits on it. The reported slack can be about −1e-13,
+  which is within the tolerance.
+
+**Comparison with Monte Carlo.**
+
+- The comparison uses the same `mu`, Σ, `R_f` and constraints, and the same simulation
+  run (default 50,000 portfolios, seed 42).
+- Candidates by profile:
+  - conservative: the lowest-volatility sampled portfolio
+  - balanced: the highest-Sharpe sampled portfolio
+  - growth: the highest-return sampled portfolio with `σ ≤ σ_max`, or an explicit "none"
+    if no sampled portfolio qualifies
+- The response reports both portfolios' metrics, the differences, and whether each
+  satisfies the constraints. If a sampled portfolio ever beat the optimizer, a warning
+  would be raised.
+
+**Exact efficient frontier.** For evenly spaced targets between the minimum-volatility
+return and `max(mu)`, minimize `wᵀΣw` subject to `wᵀmu = target` and the constraints,
+warm-starting each target from the previous solution. Targets that fail validation are
+omitted, never interpolated.
+
+**Results on the actual dataset** (2019-01-03 to 2025-12-31; 50,000 simulated portfolios,
+seed 42):
+
+| Profile | Return | Volatility | Sharpe | Monte Carlo candidate | Optimizer − candidate |
+|---|---|---|---|---|---|
+| Conservative | 8.00% | 3.55% | 0.69 | 11.76% / 4.74% / 1.30 | volatility −1.19 pp |
+| Balanced | 16.77% | 7.54% | 1.48 | 17.93% / 8.50% / 1.45 | Sharpe +0.031 |
+| Growth (σ_max = 12%) | 23.07% | 12.00% | 1.46 | 22.04% / 11.94% / 1.38 | return +1.03 pp |
+
+The conservative portfolio is 93% GSEC. Uniform sampling almost never reaches such
+concentrated allocations, which is why the optimizer's advantage is largest there.
+
+**Limitations.**
+
+- The weights are optimal only for the historical estimates and are sensitive to
+  estimation error in `mu`.
+- The covariance is not shrunk.
+- No transaction costs, taxes, liquidity limits or rebalancing are modelled.
+- None of the results are forecasts.
+
+## 9. Validation (Phase 8)
+
+- **Automated tests** (`uv run pytest`) cover:
+  - returns, statistics and matrices against hand calculations
+  - CAPM against known synthetic relationships, including excess versus raw returns
+  - portfolio metrics against explicit sums
+  - Monte Carlo validity and seed reproducibility
+  - the optimizers against closed forms (two-asset minimum variance) and exhaustive
+    simplex grids
+  - infeasible limits and solver failures, which must never be reported as success
+  - the API on a synthetic dataset built by the real pipeline
+- **End-to-end on the real data** (`uv run python -m scripts.validate_end_to_end`) drives
+  the API through readiness, analytics, CAPM, Monte Carlo, all three optimizations, the
+  comparisons and error handling, re-checking every result independently.

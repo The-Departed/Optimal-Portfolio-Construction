@@ -38,7 +38,7 @@ export function CapmTable({ data }: { data: CapmSummaryResponse }) {
                 <tr key={e.asset_id}>
                   <th scope="row" className="px-5 py-2.5 text-left font-normal">
                     <span className="font-medium">{e.asset_id}</span>
-                    <span className="block text-xs text-ink-muted">{e.sector}</span>
+                    <span className="block text-xs text-ink-muted">{e.name} · {e.sector}</span>
                   </th>
                   <td className="px-3 py-2.5">{orDash(e.observations, formatInteger)}</td>
                   <td className="px-3 py-2.5">{orDash(e.historical_mean_return, formatPercent)}</td>

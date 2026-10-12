@@ -1,5 +1,4 @@
 // Mirrors backend/app/schemas/portfolio.py. Weights follow the canonical asset order.
-import type { PortfolioMetrics } from "@/types/api";
 
 export type InvestorProfile = "conservative" | "balanced" | "growth";
 
@@ -21,15 +20,13 @@ export interface OptimizationRequest {
   profile: InvestorProfile;
   /** Annualized sigma_max as a decimal (0.15 == 15%). Growth profile only. */
   max_volatility?: number;
+  simulation_portfolios?: number;
+  simulation_seed?: number;
 }
 
 export interface AssetWeight {
   asset_id: string;
   weight: number;
-}
-
-export interface SimulatedPortfolio extends PortfolioMetrics {
-  weights: number[];
 }
 
 export interface CandidatePortfolio {
@@ -90,12 +87,67 @@ export interface SimulationResponse {
   output_files: Record<string, string>;
 }
 
+export interface SolverAttempt {
+  label: string;
+  success: boolean;
+  accepted: boolean;
+  message: string;
+  iterations: number;
+  evaluations: number;
+}
+
 export interface OptimizationResponse {
   profile: InvestorProfile;
+  label: string;
+  objective: string;
+  formulation: string;
+  status: "optimal";
   max_volatility: number | null;
-  weights: AssetWeight[];
-  metrics: PortfolioMetrics;
+  portfolio: { weights: AssetWeight[]; expected_return: number; volatility: number; sharpe_ratio: number | null };
+  inputs: SimulationResponse["inputs"];
+  solver: {
+    solver: string;
+    configuration: Record<string, unknown>;
+    success: boolean;
+    convex_problem: boolean;
+    best_start: string;
+    iterations: number;
+    starts_tried: number;
+    starts_accepted: number;
+    attempts: SolverAttempt[];
+    verification: Record<string, number>;
+  };
+  constraints: {
+    sum_of_weights: number;
+    sum_residual_raw: number;
+    bound_violation_raw: number;
+    min_weight: number;
+    max_weight: number;
+    volatility_limit: number | null;
+    volatility_slack: number | null;
+    tolerance: Record<string, number>;
+    feasible: boolean;
+  };
+  comparison: {
+    simulation_id: string;
+    n_portfolios: number;
+    seed: number;
+    candidate: Omit<CandidatePortfolio, "label"> & { label: string } | null;
+    candidate_rule: string;
+    candidate_satisfies_constraints: boolean | null;
+    optimizer_passes_checks: boolean;
+    return_difference: number | null;
+    volatility_difference: number | null;
+    sharpe_difference: number | null;
+    note: string;
+  };
+  warnings: string[];
+}
+
+export interface FrontierResponse {
+  label: string;
+  method: string;
+  asset_order: string[];
   risk_free_rate: number;
-  solver_message: string;
-  best_simulated: SimulatedPortfolio | null;
+  points: { expected_return: number; volatility: number; sharpe_ratio: number | null; weights: number[] }[];
 }

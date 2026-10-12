@@ -3,7 +3,6 @@
 export type ErrorCode =
   | "VALIDATION_ERROR"
   | "DATA_NOT_READY"
-  | "NOT_IMPLEMENTED"
   | "OPTIMIZATION_FAILED"
   | "INFEASIBLE_CONSTRAINT"
   | "INTERNAL_ERROR";
@@ -97,11 +96,4 @@ export interface AssetUniverseResponse {
   assets: Asset[];
   benchmark: ReferenceSeries;
   risk_free: ReferenceSeries;
-}
-
-/** Annualized decimals (0.12 == 12%), computed by the backend. */
-export interface PortfolioMetrics {
-  expected_return: number;
-  volatility: number;
-  sharpe_ratio: number;
 }

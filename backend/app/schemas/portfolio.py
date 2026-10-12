@@ -1,11 +1,11 @@
-"""Portfolio simulation and optimization contracts (implemented in Phases 5-6)."""
+"""Portfolio simulation (Phase 5) and optimization (Phase 6) contracts."""
 
 from typing import Self
 
 from pydantic import Field, model_validator
 
 from app.domain.profiles import InvestorProfile
-from app.schemas.common import ApiModel, PortfolioMetrics
+from app.schemas.common import ApiModel
 
 
 class ProfileDefinitionOut(ApiModel):
@@ -32,6 +32,10 @@ class OptimizationRequest(ApiModel):
         lt=5,
         description="Annualized sigma_max as a decimal (0.15 == 15%). Required for growth.",
     )
+    simulation_portfolios: int = Field(
+        default=50_000, ge=100, le=200_000, description="Monte Carlo run used for comparison"
+    )
+    simulation_seed: int = Field(default=42, ge=0, le=2**32 - 1)
 
     @model_validator(mode="after")
     def _check_max_volatility(self) -> Self:
@@ -45,10 +49,6 @@ class OptimizationRequest(ApiModel):
 class AssetWeight(ApiModel):
     asset_id: str
     weight: float = Field(ge=0, le=1)
-
-
-class SimulatedPortfolio(PortfolioMetrics):
-    weights: list[float] = Field(description="Weights in canonical asset order.")
 
 
 class CandidatePortfolio(ApiModel):
@@ -126,11 +126,99 @@ class SimulationResponse(ApiModel):
     output_files: dict[str, str]
 
 
+class OptimizedPortfolio(ApiModel):
+    weights: list[AssetWeight]
+    expected_return: float
+    volatility: float
+    sharpe_ratio: float | None
+
+
+class SolverAttempt(ApiModel):
+    label: str
+    success: bool
+    accepted: bool
+    message: str
+    iterations: int
+    evaluations: int
+
+
+class SolverDiagnostics(ApiModel):
+    solver: str
+    configuration: dict[str, object]
+    success: bool
+    convex_problem: bool
+    best_start: str
+    iterations: int
+    starts_tried: int
+    starts_accepted: int
+    attempts: list[SolverAttempt]
+    verification: dict[str, float]
+
+
+class ConstraintCheck(ApiModel):
+    sum_of_weights: float
+    sum_residual_raw: float = Field(description="|sum(w) - 1| of the raw solver output")
+    bound_violation_raw: float = Field(description="Max violation of 0 <= w <= 1 before cleanup")
+    min_weight: float
+    max_weight: float
+    volatility_limit: float | None
+    volatility_slack: float | None = Field(description="sigma_max - volatility (growth only)")
+    tolerance: dict[str, float]
+    feasible: bool
+
+
+class SimulationComparison(ApiModel):
+    simulation_id: str
+    n_portfolios: int
+    seed: int
+    candidate: CandidatePortfolio | None
+    candidate_rule: str
+    candidate_satisfies_constraints: bool | None
+    optimizer_passes_checks: bool
+    return_difference: float | None = Field(description="optimizer - candidate")
+    volatility_difference: float | None
+    sharpe_difference: float | None
+    note: str
+
+
+class EstimationInputs(ApiModel):
+    asset_order: list[str]
+    expected_returns: dict[str, float]
+    expected_return_convention: str
+    covariance_convention: str
+    risk_free_rate: float
+    risk_free_convention: str
+    sample_start: str
+    sample_end: str
+    observations: int
+    dataset_generated_at: str
+
+
 class OptimizationResponse(ApiModel):
     profile: InvestorProfile
+    label: str
+    objective: str
+    formulation: str
+    status: str = Field(description="optimal: solver converged and every constraint check passed")
     max_volatility: float | None
-    weights: list[AssetWeight]
-    metrics: PortfolioMetrics
+    portfolio: OptimizedPortfolio
+    inputs: EstimationInputs
+    solver: SolverDiagnostics
+    constraints: ConstraintCheck
+    comparison: SimulationComparison
+    warnings: list[str]
+
+
+class FrontierPoint(ApiModel):
+    expected_return: float
+    volatility: float
+    sharpe_ratio: float | None
+    weights: list[float] = Field(description="Canonical asset order")
+
+
+class FrontierResponse(ApiModel):
+    label: str
+    method: str
+    asset_order: list[str]
     risk_free_rate: float
-    solver_message: str
-    best_simulated: SimulatedPortfolio | None = None
+    points: list[FrontierPoint]

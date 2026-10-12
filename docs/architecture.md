@@ -52,9 +52,8 @@ Every error response uses one schema: `ErrorResponse {code, message, details}`.
 |---|---|---|
 | `VALIDATION_ERROR` | 422 | Request body/query failed schema validation (e.g. growth without `max_volatility`). |
 | `DATA_NOT_READY` | 503 | No validated dataset (`manifest.json` missing, invalid or failed). |
-| `NOT_IMPLEMENTED` | 501 | Endpoint reserved for a later phase. |
-| `INFEASIBLE_CONSTRAINT` | 422 | User constraint admits no feasible portfolio (Phase 6). |
-| `OPTIMIZATION_FAILED` | 422 | Solver did not converge to a valid allocation (Phase 6). |
+| `INFEASIBLE_CONSTRAINT` | 422 | User constraint admits no feasible portfolio; `details.minimum_volatility` |
+| `OPTIMIZATION_FAILED` | 422 | No start converged to a solution that passes the feasibility checks |
 
 Services raise typed `AppError` subclasses. Handlers in `app/core/errors.py` map them to
 responses, so analysis endpoints never return fabricated "successful" results.
@@ -76,7 +75,8 @@ responses, so analysis endpoints never return fabricated "successful" results.
 | GET | `/api/v1/analytics/risk-free` | 3 | Native weekly yields and inspection profile (no conversion) |
 | GET | `/api/v1/capm/summary?equities=…` | 4 | CAPM for the six equities: beta, CAPM E(R), Jensen's alpha, diagnostics, warnings |
 | POST | `/api/v1/portfolio/simulate` | 5 | Body `{n_portfolios, seed, scatter_points}`; candidates, summaries, scatter, frontier approximation, checks |
-| POST | `/api/v1/portfolio/optimize` | 6 | Reserved: 422 / 503 / 501 |
+| POST | `/api/v1/portfolio/optimize` | 6 | Body `{profile, max_volatility?, simulation_portfolios?, simulation_seed?}`; portfolio, solver diagnostics, constraint checks, Monte Carlo comparison |
+| GET | `/api/v1/portfolio/frontier?points=5..100` | 6 | Exact long-only efficient frontier |
 
 Interactive OpenAPI docs are served at `http://localhost:8000/docs`.
 
@@ -113,6 +113,19 @@ AnalyticsService.result() ─► market_inputs.build ─► CapmService ─► a
 - The frontend routes `/capm` and `/portfolio` are lazy-loaded; React only formats values
   and draws backend results.
 
+## Optimization (Phase 6) and frontend workflow (Phase 7)
+
+- `optimization_service.optimize` runs (or reuses) the Monte Carlo simulation, solves the
+  selected profile with `analytics.optimization`, validates the solution and builds the
+  comparison. Sub-second on the real data.
+- The frontend's `/portfolio` page keeps the latest successful result **per profile**.
+  A failed request shows its error but never erases previous results. Submissions are
+  disabled while a request is pending, and every request has a 60 s timeout
+  (`ApiError` code `TIMEOUT`).
+- The risk-return chart overlays the simulated subsample, the exact frontier
+  (`/portfolio/frontier`), the Monte Carlo candidate and each optimized profile, all
+  fetched from the backend.
+
 ## Data pipeline (Phase 2)
 
 ```
@@ -140,7 +153,7 @@ Phase 7) for charts.
 ```
 src/
   app/            providers (QueryClient), route table, browser router
-  components/     layout (shell, sidebar), common (Card, EmptyState, ErrorAlert, RequireData, …), charts (ChartFrame)
+  components/     layout (shell, sidebar), common (Card, EmptyState, ErrorAlert, RequireData, IssueList, …)
   features/       dashboard | capm | portfolio — each with api.ts, types.ts, hooks/, components/, page.tsx
   hooks/          data hooks shared across features (dataset status, asset universe)
   lib/            api-client (typed fetch + ApiError), formatters (display only), query keys
@@ -150,11 +163,10 @@ src/
 ```
 
 - `lib/api-client.ts` turns every non-2xx response into an `ApiError` carrying the backend
-  `code`, so the UI can tell "data not ready" apart from "not implemented" and from
+  `code`, so the UI can tell "data not ready" apart from "infeasible", "solver failed" and from
   validation failures.
 - `RequireData` gates any results area on `/data/status`. When the dataset is missing, the
   UI shows an explicit empty state, never placeholder numbers.
-- `ChartFrame` renders an empty state until it receives real backend results.
 - Investor-profile labels and formulations come from `/portfolio/profiles`, so the
   frontend does not duplicate domain definitions.
 - `formatters.ts` performs display formatting only (percent, dates).

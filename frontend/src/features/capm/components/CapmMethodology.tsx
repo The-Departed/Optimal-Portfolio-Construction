@@ -10,11 +10,12 @@ export function CapmMethodology() {
           E(R<sub>i</sub>) = R<sub>f</sub> + β<sub>i</sub> (E(R<sub>m</sub>) − R<sub>f</sub>)
         </p>
         <ul className="list-disc space-y-1 pl-5 text-ink-muted">
+          <li>Beta (β) measures sensitivity to <em>market excess returns</em>: a 1% market excess move goes with a β% move in the stock&apos;s excess return, on average.</li>
           <li>OLS on daily excess returns of the common sample; R<sub>f,t</sub> accrues the latest 91-day T-bill auction yield over each interval&apos;s calendar days.</li>
           <li>Annualized returns use the arithmetic convention (mean daily return × 252), the same as R<sub>f</sub> and E(R<sub>m</sub>).</li>
           <li>
             <strong className="font-medium text-ink">Jensen&apos;s alpha</strong> = historical annualized mean return − CAPM expected return. With these
-            conventions it equals the regression intercept × 252 exactly.
+            conventions it equals the regression intercept × 252 exactly. Historical alpha is not a guarantee of future outperformance.
           </li>
         </ul>
       </div>
