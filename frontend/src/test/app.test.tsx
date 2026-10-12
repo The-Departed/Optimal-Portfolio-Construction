@@ -25,9 +25,11 @@ describe("dashboard", () => {
     mockApi({ ...baseHandlers, "/data/status": () => ({ status: 200, body: dataReady }) });
     renderRoute("/");
     expect(await screen.findByText("Ready for analysis")).toBeInTheDocument();
-    expect(screen.getByText("Validation: PASS with warnings")).toBeInTheDocument();
+    expect(screen.getByText("Validation: Validated")).toBeInTheDocument();
     expect(screen.getByText(/1,689/)).toBeInTheDocument();
-    expect(screen.getByText("Warnings (1)")).toBeInTheDocument();
+    expect(screen.getByText("Validated dataset available.")).toBeInTheDocument();
+    expect(screen.queryByText(/warnings/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Known limitations/)).not.toBeInTheDocument();
     expect(screen.getByText("GSEC")).toBeInTheDocument();
   });
 

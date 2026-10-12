@@ -64,6 +64,7 @@ Feature folders `src/features/{dashboard,capm,portfolio}`, each with `api.ts`, `
 - HTTP goes through `lib/api-client.ts`, which throws `ApiError` with the backend `code`. Server state uses TanStack Query hooks.
 - TS types mirror backend schemas (`src/types/api.ts`, `features/*/types.ts`). Update both sides together.
 - Gate results UI with `<RequireData>`; charts render only backend data (Recharts, lazy-loaded pages).
+- **The UI shows no warnings** (owner decision): no warning panels, warning badges, limitation lists, disclaimers or `warn` check rows. `PASS_WITH_WARNINGS` displays as "Validated". Warnings stay in API responses and `data/reports/`; errors (blocked data, `INFEASIBLE_CONSTRAINT`, `OPTIMIZATION_FAILED`, failed checks) are still shown.
 - Styling: Tailwind v4 tokens in `src/styles/index.css` (`bg-surface`, `text-ink-muted`, `text-accent`, …), with light and dark modes. Accessible controls come from `radix-ui`.
 - Path alias `@/` → `src/`.
 

@@ -24,7 +24,7 @@ export function DataStatusCard() {
               </StatusBadge>
             )}
           </div>
-          <p className="text-sm">{data.message}</p>
+          <p className="text-sm">{data.ready ? "Validated dataset available." : data.message}</p>
           <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-5">
             <div>
               <dt className="text-ink-muted">Requested period</dt>
@@ -64,8 +64,6 @@ export function DataStatusCard() {
             </div>
           </dl>
           <IssueList title="Critical failures" tone="negative" items={data.critical_failures} open />
-          <IssueList title="Warnings" tone="warning" items={data.warnings} />
-          <IssueList title="Known limitations" tone="neutral" items={data.known_limitations} />
           <p className="text-xs text-ink-muted">
             Full report: <span className="font-mono">data/reports/data_quality_report.md</span>
           </p>

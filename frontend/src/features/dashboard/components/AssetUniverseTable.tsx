@@ -44,7 +44,7 @@ export function AssetUniverseTable() {
                   <td className="px-3 py-2.5 text-ink-muted">{asset.sector}</td>
                   <td className="px-3 py-2.5 font-mono text-xs">{asset.symbol ?? "TBD"}</td>
                   <td className="px-5 py-2.5">
-                    <StatusBadge tone={asset.verified ? "positive" : "warning"}>
+                    <StatusBadge tone={asset.verified ? "positive" : "neutral"}>
                       {asset.verified ? "Verified" : "Unverified"}
                     </StatusBadge>
                   </td>

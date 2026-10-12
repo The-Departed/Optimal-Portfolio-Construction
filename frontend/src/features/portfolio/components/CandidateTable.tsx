@@ -7,7 +7,7 @@ export function CandidateTable({ candidate }: { candidate: CandidatePortfolio })
   return (
     <section className="rounded-lg border border-border p-4">
       <h3 className="text-sm font-semibold">{TITLE[candidate.label]}</h3>
-      <p className="mt-0.5 text-xs text-ink-muted">Simulated portfolio #{candidate.portfolio_id} · best in sample, not a guaranteed optimum</p>
+      <p className="mt-0.5 text-xs text-ink-muted">Simulated portfolio #{candidate.portfolio_id} · best in sample</p>
       <dl className="mt-3 grid grid-cols-3 gap-2 text-sm">
         <div><dt className="text-xs text-ink-muted">Expected return</dt><dd className="font-semibold tabular-nums">{formatPercent(candidate.expected_return)}</dd></div>
         <div><dt className="text-xs text-ink-muted">Volatility</dt><dd className="font-semibold tabular-nums">{formatPercent(candidate.volatility)}</dd></div>

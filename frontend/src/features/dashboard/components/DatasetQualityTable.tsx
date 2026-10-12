@@ -27,7 +27,7 @@ export function DatasetQualityTable() {
           </thead>
           <tbody className="divide-y divide-border">
             {data.datasets.map((d) => {
-              const issues = [...d.failures, ...d.warnings];
+              const issues = d.failures;
               return (
                 <tr key={d.dataset_id} className="align-top">
                   <td className="px-5 py-2.5">

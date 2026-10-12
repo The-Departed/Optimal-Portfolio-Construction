@@ -10,7 +10,7 @@ const ICON = {
 export function ChecksList({ checks }: { checks: AnalyticsCheck[] }) {
   return (
     <ul className="space-y-2 text-sm">
-      {checks.map((c) => {
+      {checks.filter((c) => c.status !== "warn").map((c) => {
         const { Icon, cls, label } = ICON[c.status];
         return (
           <li key={c.name} className="flex gap-2">

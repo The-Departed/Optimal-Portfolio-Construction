@@ -165,6 +165,7 @@ src/
 - `lib/api-client.ts` turns every non-2xx response into an `ApiError` carrying the backend
   `code`, so the UI can tell "data not ready" apart from "infeasible", "solver failed" and from
   validation failures.
+- By the project owner's decision, the UI displays no warnings, limitation lists or disclaimers, and `PASS_WITH_WARNINGS` is shown as "Validated". The API responses and `data/reports/` still carry every warning; errors and failed checks are always displayed.
 - `RequireData` gates any results area on `/data/status`. When the dataset is missing, the
   UI shows an explicit empty state, never placeholder numbers.
 - Investor-profile labels and formulations come from `/portfolio/profiles`, so the

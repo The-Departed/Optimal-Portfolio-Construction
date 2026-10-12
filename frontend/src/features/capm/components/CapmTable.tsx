@@ -64,7 +64,6 @@ export function CapmTable({ data }: { data: CapmSummaryResponse }) {
           </tbody>
         </table>
       </div>
-      <p className="mt-3 text-xs text-ink-muted">{data.disclaimer}</p>
     </Card>
   );
 }

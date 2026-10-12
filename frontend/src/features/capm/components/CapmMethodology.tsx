@@ -15,7 +15,7 @@ export function CapmMethodology() {
           <li>Annualized returns use the arithmetic convention (mean daily return × 252), the same as R<sub>f</sub> and E(R<sub>m</sub>).</li>
           <li>
             <strong className="font-medium text-ink">Jensen&apos;s alpha</strong> = historical annualized mean return − CAPM expected return. With these
-            conventions it equals the regression intercept × 252 exactly. Historical alpha is not a guarantee of future outperformance.
+            conventions it equals the regression intercept × 252 exactly.
           </li>
         </ul>
       </div>

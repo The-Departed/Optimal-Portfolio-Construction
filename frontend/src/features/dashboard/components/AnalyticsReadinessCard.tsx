@@ -6,7 +6,8 @@ import { useAnalyticsSummary } from "@/features/analytics/hooks/useAnalytics";
 import { useDataStatus } from "@/hooks/useDataStatus";
 import { formatDate, formatInteger } from "@/lib/formatters";
 
-const TONE = { PASS: "positive", PASS_WITH_WARNINGS: "warning", FAILED: "negative" } as const;
+const TONE = { PASS: "positive", PASS_WITH_WARNINGS: "positive", FAILED: "negative" } as const;
+const LABEL = { PASS: "Validated", PASS_WITH_WARNINGS: "Validated", FAILED: "Failed" } as const;
 
 export function AnalyticsReadinessCard() {
   const status = useDataStatus();
@@ -26,10 +27,10 @@ export function AnalyticsReadinessCard() {
       {summary.data && (
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="space-y-1">
-            <StatusBadge tone={TONE[summary.data.status]}>{`Analytics: ${summary.data.status.replaceAll("_", " ")}`}</StatusBadge>
+            <StatusBadge tone={TONE[summary.data.status]}>{`Analytics: ${LABEL[summary.data.status]}`}</StatusBadge>
             <p className="text-sm text-ink-muted">
               {formatInteger(summary.data.sample.observations)} daily returns, {formatDate(summary.data.sample.start)} –{" "}
-              {formatDate(summary.data.sample.end)} · {summary.data.checks.filter((c) => c.status === "warn").length} warning(s)
+              {formatDate(summary.data.sample.end)}
             </p>
           </div>
           <Link to="/analytics" className="inline-flex items-center gap-1.5 text-sm font-medium text-accent hover:underline">

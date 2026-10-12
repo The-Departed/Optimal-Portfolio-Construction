@@ -21,7 +21,8 @@ describe("CAPM page", () => {
     const bbb = within(table).getByRole("row", { name: /BBB/ });
     expect(within(bbb).getByText(/Regression failed: 240 observations/)).toBeInTheDocument();
     expect(screen.getByText("Market risk premium")).toBeInTheDocument();
-    expect(screen.getByText("Not a forecast.")).toBeInTheDocument();
+    expect(screen.queryByText("Not a forecast.")).not.toBeInTheDocument(); // disclaimers are not shown
+    expect(screen.queryByText(/Warnings and limitations/)).not.toBeInTheDocument();
   });
 
   it("shows an error when CAPM cannot be computed", async () => {
@@ -47,7 +48,8 @@ describe("Monte Carlo panel", () => {
     expect(screen.getByText("Maximum-Sharpe candidate")).toBeInTheDocument();
     expect(screen.getByText("1.45")).toBeInTheDocument(); // max Sharpe from backend
     expect(screen.getByText("50,000")).toBeInTheDocument();
-    expect(screen.getAllByText(/not a guaranteed optimum/).length).toBe(2);
+    expect(screen.getAllByText(/best in sample/).length).toBe(2);
+    expect(screen.queryByText(/Simulation limitations/)).not.toBeInTheDocument();
     expect(screen.getByText(/Monte Carlo approximation of the efficient frontier/)).toBeInTheDocument();
   });
 

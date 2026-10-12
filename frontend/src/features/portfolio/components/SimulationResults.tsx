@@ -1,5 +1,4 @@
 import { ChecksList } from "@/features/analytics/components/ChecksList";
-import { IssueList } from "@/components/common/IssueList";
 import { CandidateTable } from "@/features/portfolio/components/CandidateTable";
 import { OpportunitySetChart } from "@/features/portfolio/components/OpportunitySetChart";
 import type { SimulationResponse } from "@/features/portfolio/types";
@@ -45,7 +44,6 @@ export function SimulationResults({ data }: { data: SimulationResponse }) {
           <p className="font-mono text-xs text-ink-muted">Saved: {Object.values(data.output_files).join(", ")}</p>
         </div>
       </details>
-      <IssueList title="Simulation limitations" tone="warning" items={data.warnings} open />
     </div>
   );
 }

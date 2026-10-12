@@ -2,7 +2,6 @@ import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YA
 import { Card } from "@/components/common/Card";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { LoadingState } from "@/components/common/LoadingState";
-import { StatusBadge } from "@/components/common/StatusBadge";
 import { useRiskFree } from "@/features/analytics/hooks/useAnalytics";
 import { formatDate, formatFixed2, formatInteger } from "@/lib/formatters";
 
@@ -16,9 +15,8 @@ export function RiskFreePanel() {
     .map((o) => o.auction_date);
   return (
     <Card
-      title="Risk-free rate (inspection only)"
-      description="Native weekly observations. No daily risk-free series is derived until the conversion convention is approved."
-      actions={<StatusBadge tone="warning">Conversion pending approval</StatusBadge>}
+      title="Risk-free rate"
+      description="Native weekly auction observations, as used by CAPM and Sharpe-ratio calculations."
     >
       {isPending && <LoadingState label="Loading risk-free series…" />}
       {error && <ErrorAlert title="Risk-free series unavailable" error={error} />}
@@ -50,7 +48,7 @@ export function RiskFreePanel() {
             <div><dt className="text-ink-muted">Auctions in study period</dt><dd>{formatInteger(p.observations)} ({formatDate(p.first_date)} – {formatDate(p.last_date)})</dd></div>
             <div><dt className="text-ink-muted">Range</dt><dd>{formatFixed2(p.min_yield_pct)}% – {formatFixed2(p.max_yield_pct)}% p.a.</dd></div>
           </dl>
-          <p className="text-xs text-ink-muted lg:col-span-2">Proposed conversion: {p.proposed_conversion}</p>
+          <p className="text-xs text-ink-muted lg:col-span-2">Daily conversion: {p.proposed_conversion}</p>
         </div>
       )}
     </Card>

@@ -10,7 +10,7 @@ export function CapmReturnChart({ data }: { data: CapmSummaryResponse }) {
   return (
     <Card
       title="Historical vs CAPM-implied annual return"
-      description="The gap between the bars is Jensen's alpha. Historical, not a forecast."
+      description="The gap between the bars is Jensen's alpha."
     >
       <div className="h-80" role="img" aria-label="Historical mean return and CAPM expected return by equity">
         <ResponsiveContainer width="100%" height="100%">

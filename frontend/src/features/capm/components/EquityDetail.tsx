@@ -65,7 +65,6 @@ export function EquityDetail({ data }: { data: CapmSummaryResponse }) {
           </section>
         ))}
       </div>
-      {e.warnings.length > 0 && <p className="mt-4 text-xs text-ink-muted">{e.warnings.join(" ")}</p>}
     </Card>
   );
 }

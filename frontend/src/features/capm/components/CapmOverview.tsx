@@ -1,5 +1,4 @@
 import { Card } from "@/components/common/Card";
-import { IssueList } from "@/components/common/IssueList";
 import type { CapmSummaryResponse } from "@/features/capm/types";
 import { formatDate, formatInteger, formatPercent } from "@/lib/formatters";
 
@@ -24,9 +23,6 @@ export function CapmOverview({ data }: { data: CapmSummaryResponse }) {
       <p className="mt-3 text-xs text-ink-muted">
         R_f: {data.risk_free.convention} Average quoted yield applied: {formatPercent(data.risk_free.mean_quoted_yield)}.
       </p>
-      <div className="mt-4">
-        <IssueList title="Warnings and limitations" tone="warning" items={data.warnings} />
-      </div>
     </Card>
   );
 }

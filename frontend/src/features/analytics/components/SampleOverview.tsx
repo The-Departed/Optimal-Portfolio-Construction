@@ -4,7 +4,8 @@ import { ChecksList } from "@/features/analytics/components/ChecksList";
 import type { AnalyticsSummary } from "@/features/analytics/types";
 import { formatDate, formatDateTime, formatInteger } from "@/lib/formatters";
 
-const TONE = { PASS: "positive", PASS_WITH_WARNINGS: "warning", FAILED: "negative" } as const;
+const TONE = { PASS: "positive", PASS_WITH_WARNINGS: "positive", FAILED: "negative" } as const;
+const LABEL = { PASS: "Validated", PASS_WITH_WARNINGS: "Validated", FAILED: "Failed" } as const;
 
 export function SampleOverview({ summary }: { summary: AnalyticsSummary }) {
   const { sample } = summary;
@@ -12,7 +13,7 @@ export function SampleOverview({ summary }: { summary: AnalyticsSummary }) {
     <Card
       title="Sample and validation"
       description="All statistics below use the validated common sample unless stated otherwise."
-      actions={<StatusBadge tone={TONE[summary.status]}>{`Analytics: ${summary.status.replaceAll("_", " ")}`}</StatusBadge>}
+      actions={<StatusBadge tone={TONE[summary.status]}>{`Analytics: ${LABEL[summary.status]}`}</StatusBadge>}
     >
       <dl className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2 lg:grid-cols-4">
         <div>
@@ -35,12 +36,11 @@ export function SampleOverview({ summary }: { summary: AnalyticsSummary }) {
         </div>
       </dl>
       <details className="mt-4 rounded-lg border border-border px-4 py-3">
-        <summary className="cursor-pointer text-sm font-medium">Validation checks ({summary.checks.length})</summary>
+        <summary className="cursor-pointer text-sm font-medium">Validation checks ({summary.checks.filter((c) => c.status !== "warn").length})</summary>
         <div className="mt-3">
           <ChecksList checks={summary.checks} />
         </div>
       </details>
-      <p className="mt-4 text-xs text-ink-muted">{summary.disclaimer}</p>
     </Card>
   );
 }

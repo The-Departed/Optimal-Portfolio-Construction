@@ -1,5 +1,4 @@
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { IssueList } from "@/components/common/IssueList";
 import { AllocationChart } from "@/features/portfolio/components/AllocationChart";
 import { ComparisonTable } from "@/features/portfolio/components/ComparisonTable";
 import { SolverStatus } from "@/features/portfolio/components/SolverStatus";
@@ -62,7 +61,6 @@ export function OptimizationResult({ result }: { result: OptimizationResponse })
           <li>Formulation: <span className="font-mono text-xs">{result.formulation}</span></li>
         </ul>
       </details>
-      <IssueList title="Warnings and limitations" tone="warning" items={result.warnings} />
     </div>
   );
 }

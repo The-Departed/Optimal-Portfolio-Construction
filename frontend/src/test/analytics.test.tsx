@@ -29,7 +29,7 @@ describe("descriptive analytics page", () => {
     const bbb = within(table).getByRole("row", { name: /BBB/ });
     expect(within(bbb).getAllByText("—").length).toBeGreaterThan(0); // CAGR not annualized
     expect(within(table).getByText("benchmark")).toBeInTheDocument();
-    expect(screen.getByText("Analytics: PASS WITH WARNINGS")).toBeInTheDocument();
+    expect(screen.getByText("Analytics: Validated")).toBeInTheDocument();
   });
 
   it("renders the correlation matrix as a readable table", async () => {
@@ -50,10 +50,11 @@ describe("descriptive analytics page", () => {
     expect(spy.mock.calls.some(([u]) => String(u).includes("sample=individual"))).toBe(true);
   });
 
-  it("shows the risk-free series as inspection-only", async () => {
+  it("shows the risk-free series without warning badges", async () => {
     mockApi(handlers);
     renderRoute("/analytics");
-    expect(await screen.findByText("Conversion pending approval")).toBeInTheDocument();
+    expect(await screen.findByText("Risk-free rate")).toBeInTheDocument();
+    expect(screen.queryByText(/pending approval/)).not.toBeInTheDocument();
     expect(await screen.findByText(/percent per annum, actual\/365/)).toBeInTheDocument();
   });
 
@@ -79,7 +80,8 @@ describe("dashboard analytics readiness", () => {
   it("summarizes analytics status from the backend", async () => {
     mockApi(handlers);
     renderRoute("/");
-    expect(await screen.findByText("Analytics: PASS WITH WARNINGS")).toBeInTheDocument();
+    expect(await screen.findByText("Analytics: Validated")).toBeInTheDocument();
+    expect(screen.queryByText(/warning\(s\)/)).not.toBeInTheDocument();
     expect(screen.getByText(/100 daily returns/)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /open descriptive analytics/i })).toHaveAttribute("href", "/analytics");
   });
