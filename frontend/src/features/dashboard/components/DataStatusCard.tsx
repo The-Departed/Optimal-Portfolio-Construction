@@ -2,7 +2,7 @@ import { Card } from "@/components/common/Card";
 import { ErrorAlert } from "@/components/common/ErrorAlert";
 import { LoadingState } from "@/components/common/LoadingState";
 import { StatusBadge } from "@/components/common/StatusBadge";
-import { IssueList } from "@/features/dashboard/components/IssueList";
+import { IssueList } from "@/components/common/IssueList";
 import { OVERALL_BADGE, STATE_BADGE } from "@/features/dashboard/status";
 import { useDataStatus } from "@/hooks/useDataStatus";
 import { formatDate, formatDateTime, formatPercent } from "@/lib/formatters";

@@ -5,8 +5,8 @@
 | 1 | Project scaffold and architecture | **Complete** |
 | 2 | Data acquisition and validation | **Complete** (PASS_WITH_WARNINGS; approvals pending) |
 | 3 | Financial data and descriptive analytics | **Complete** (analytics PASS_WITH_WARNINGS) |
-| 4 | CAPM equity evaluation | Not started |
-| 5 | Monte Carlo portfolio simulation | Not started |
+| 4 | CAPM equity evaluation | **Complete** |
+| 5 | Monte Carlo portfolio simulation | **Complete** |
 | 6 | Constrained optimization | Not started |
 | 7 | Frontend integration and visualization | Not started |
 | 8 | Validation and final delivery | Not started |
@@ -56,7 +56,23 @@
   multi-session returns, the pending risk-free conversion, and the upstream Phase 2
   warnings.
 
-## Phases 4–8
+## Phases 4–5 — CAPM and Monte Carlo (complete)
+
+- CAPM: `app/analytics/capm.py`, `app/services/capm_service.py`, `/api/v1/capm/summary`,
+  and the `/capm` page. All six regressions were estimated on 1,689 daily intervals
+  (2019-01-03 to 2025-12-31). Betas range from 0.57 to 1.10 and R² from 0.17 to 0.58; no
+  intercept is significant at 5%.
+- Risk-free: the as-of accrual convention from methodology §4 is adopted (annualized
+  `R_f` 5.57%); formal approval is still pending.
+- Monte Carlo: `app/analytics/{portfolio_metrics,monte_carlo,efficient_frontier}.py`,
+  `app/services/simulation_service.py`, `/api/v1/portfolio/simulate`, and the
+  `/portfolio` page.
+- Default run (50,000 portfolios, seed 42): all checks pass.
+  - Minimum-volatility candidate: 4.74% volatility, 11.76% return.
+  - Maximum-Sharpe candidate: Sharpe 1.45, 17.93% return, 8.50% volatility.
+  - Frontier approximation: 61 portfolios.
+
+## Phases 6–8
 
 See the specification. Each phase adds its analytics module(s), service wiring and tests,
 then replaces the corresponding `NOT_IMPLEMENTED` response.

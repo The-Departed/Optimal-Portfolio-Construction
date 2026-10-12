@@ -20,12 +20,15 @@ def get_data_status_service(settings: SettingsDep) -> DataStatusService:
 DataStatusServiceDep = Annotated[DataStatusService, Depends(get_data_status_service)]
 
 
-def get_capm_service(data_status: DataStatusServiceDep) -> CapmService:
-    return CapmService(data_status)
+def get_capm_service(settings: SettingsDep, data_status: DataStatusServiceDep) -> CapmService:
+    data_status.require_ready()
+    return CapmService(settings)
 
 
-def get_portfolio_service(data_status: DataStatusServiceDep) -> PortfolioService:
-    return PortfolioService(data_status)
+def get_portfolio_service(
+    settings: SettingsDep, data_status: DataStatusServiceDep
+) -> PortfolioService:
+    return PortfolioService(settings, data_status)
 
 
 CapmServiceDep = Annotated[CapmService, Depends(get_capm_service)]

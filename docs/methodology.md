@@ -96,63 +96,112 @@ performance, and a low historical correlation does not guarantee future diversif
 - Validation: units (median about 5.5, i.e. percent), weekly cadence, gaps between
   auctions, and agreement with the yield recomputed from the cut-off price,
   `(100/P − 1) × 365/91` (maximum deviation 0.021 pp).
-- **Proposed daily alignment (to be confirmed in Phase 3):** for each aligned return
-  interval (t−1, t], take the most recent yield whose auction date is on or before t−1 (an
-  as-of join on information available at the start of the interval). Accrue it over the
-  interval's calendar days on the series' own basis: `rf_t = y/100 × days(t−1, t)/365`.
-  This handles weekends, holidays and multi-session intervals consistently. It carries a
-  published reference rate forward between auctions; it does not create daily market
-  observations. Auctions from the month before the study start are retained for this lookup.
-- **Phase 3 status:** the series is inspected, not converted. The checks confirm units
-  (percent per annum, actual/365), weekly frequency (median gap 7 days, maximum 22), 360
-  auctions in the study period plus 4 lookback auctions, and a range of 2.93–7.05%. No
-  daily risk-free series is created: the conversion above awaits approval and will be
-  applied in Phase 4. The analytics layer refuses to pass a yield series through the
-  price-return formula (`NotAPriceSeriesError`).
-- Annualized `R_f` for Sharpe ratios and CAPM will be derived from the same `rf_t` series,
-  annualized consistently with `mu`.
+- **Daily alignment (adopted in Phase 4; formal approval still pending).** Implemented in
+  `app/analytics/risk_free.py::accrued_risk_free`. For each aligned return interval
+  (t−1, t], take the most recent yield whose auction date is on or before t−1 (an as-of
+  join on information available when the interval starts). Accrue it over the interval's
+  calendar days on the series' own basis: `rf_t = y/100 × days(t−1, t)/365` (simple
+  interest, actual/365). Weekends, holidays and multi-session intervals are handled
+  consistently. Intervals with no prior auction, or whose latest auction is more than 35
+  days old, raise an error rather than being filled. The original weekly observations are
+  kept unchanged; no daily yield is created.
+- **Approximation.** A 91-day primary-auction yield is a term rate used as a short-rate
+  proxy, carried forward for up to 20 days in the actual sample.
+- **Annualization:** `R_f = 252 × mean(rf_t)` = **5.57%**, so that `R_f`, `mu` and the
+  covariance share the same ×252 scaling, keeping excess returns and Sharpe ratios
+  internally consistent. Caveat: the common sample has about 241.6 return intervals per
+  year (dropped sessions and NSE's ~248 sessions), so ×252 annualized figures sit about
+  4% above per-calendar-year values. For example, the average quoted yield is 5.33%.
+- Phase 3 only inspects the series. The analytics layer refuses to pass a yield series
+  through the price-return formula (`NotAPriceSeriesError`).
 - The government-bond ETF is a **risky asset** in the portfolio. It is not the risk-free
   asset.
 
-## 5. CAPM (Objective 1)
+## 5. CAPM (Objective 1, implemented in Phase 4)
 
-For each equity *i* and trading day *t*:
+Code: `app/analytics/capm.py`, `app/services/capm_service.py`, `GET /api/v1/capm/summary`,
+and `scripts/run_capm.py`.
 
-- Excess returns: `x_{i,t} = r_{i,t} − rf_d,t` and `x_{m,t} = r_{m,t} − rf_d,t`.
-- OLS (statsmodels): `x_{i,t} = a_i + beta_i · x_{m,t} + e_{i,t}`.
-- CAPM-implied expected return: `E(R_i) = R_f + beta_i · (E(R_m) − R_f)`, with
-  `E(R_m) = T · mean(r_{m,d})`.
-- Jensen's alpha (annualized): `alpha_i = T · a_i`. Because OLS residuals have mean zero,
-  this equals `mu_i − E(R_i)` exactly, so alpha is consistent with the CAPM figure shown.
-- Diagnostics: R², t-statistics and p-values for `a` and `beta`, standard error of `beta`,
-  number of observations, and Durbin–Watson. Newey–West (HAC) standard errors are
-  reported as a robustness check. **(Phase 4)**
+For each of the six equities, on the common sample (1,689 daily intervals, 2019-01-03 to
+2025-12-31), with identical dates for every variable:
+
+- Regression (OLS, statsmodels): `R_i,t − R_f,t = a_i + β_i (R_m,t − R_f,t) + ε_i,t`.
+  `R_i` is the equity's simple return, `R_m` the NIFTY 50 (price-index) return, and
+  `R_f` the accrued risk-free return (§4).
+- Every annualized input uses the arithmetic convention with T = 252:
+  `E(R_m) = T·mean(R_m)`, `R_f = T·mean(R_f)`, and historical mean return
+  `T·mean(R_i)`.
+- CAPM expected return: `E(R_i) = R_f + β_i (E(R_m) − R_f)`.
+- **Jensen's alpha** = historical annualized mean return − `E(R_i)` (annualized).
+- The **regression intercept** `a_i` is reported separately in daily units (decimal per
+  trading interval) and annualized as `T·a_i`. Under these conventions the two are
+  identical: because OLS residuals have mean zero, `T·a_i = T·mean(x_i) − β_i T·mean(x_m)`.
+  The service checks the identity (tolerance 1e-10) and marks the equity failed if it does
+  not hold.
+- CAGR is shown for reference but is not used in alpha, because it is a geometric quantity
+  and would mix conventions.
+- Diagnostics: OLS standard errors, t-statistics, p-values and 95% CIs for `a` and `β`;
+  Newey–West HAC p-values with lags = ⌊4(n/100)^(2/9)⌋ (7 here) as a robustness check;
+  R², adjusted R², residual standard deviation (daily and annualized), and Durbin–Watson.
+- Failure handling: fewer than 60 observations, a constant market excess return,
+  misaligned or missing data, or non-finite estimates all raise `CapmEstimationError`.
+  The equity is then reported as `failed` with every metric null.
+- Limitations:
+  - The benchmark is a price index while the equity returns include dividends. This
+    understates `E(R_m)` and overstates alpha by roughly β × the index dividend yield.
+  - The risk-free proxy is described in §4.
+  - A non-zero historical alpha (none is significant at 5% here) does not show that a
+    stock is mispriced, and is not a forecast.
 
 The CAPM module evaluates individual equities only. It is not the multi-asset optimizer.
 
-## 6. Portfolio metrics (Objective 2)
+## 6. Portfolio metrics (Objective 2, implemented in Phase 5)
 
-For weights `w` (canonical order), `mu` and `Sigma` as in §3:
+Code: `app/analytics/portfolio_metrics.py`. For weight rows `w` in canonical order,
+`mu` = annualized arithmetic mean returns (§3), `Sigma` = annualized sample covariance,
+and `R_f` from §4:
 
-- `R_p = wᵀ mu`
-- `sigma_p = sqrt(wᵀ Sigma w)`
-- `Sharpe = (R_p − R_f) / sigma_p`
+- `R_p = wᵀ mu`, `σ_p = sqrt(wᵀ Σ w)`, `Sharpe = (R_p − R_f) / σ_p`.
+- Constraints: `0 ≤ w_i ≤ 1` and `Σ w_i = 1` (tolerance 1e-9); violations raise.
+- Variance round-off within −1e-12 × max|Σ| is reported as 0. Anything more negative
+  means Σ is not PSD and raises.
+- If `σ_p < 1e-10`, the Sharpe ratio is undefined: it is returned as null and excluded
+  from the maximum-Sharpe search, never as ±inf.
 
-Constraints for all profiles: `Σ w_i = 1` and `0 ≤ w_i ≤ 1` (no short selling).
+## 7. Monte Carlo simulation (implemented in Phase 5)
 
-## 7. Monte Carlo simulation (Phase 5)
+Code: `app/analytics/monte_carlo.py`, `efficient_frontier.py`,
+`app/services/simulation_service.py`, `POST /api/v1/portfolio/simulate`, and
+`scripts/run_simulation.py`.
 
-- Default 50,000 allocations, configurable seed (`APP_RANDOM_SEED`), and
-  `numpy.random.default_rng(seed)`.
-- Weights are drawn from `Dirichlet(1, …, 1)`, the uniform distribution on the long-only
-  simplex. Every draw is feasible by construction.
-- Metrics for all draws are computed in vectorized form.
-- The opportunity set is shown as a risk/return scatter coloured by Sharpe ratio. The
-  empirical frontier is estimated as the upper envelope of simulated points within
-  volatility bins.
-- Limitation: uniform sampling rarely reaches simplex corners or edges, where optima often
-  lie. Monte Carlo is a search and visualisation method, not an optimizer. It is
-  therefore compared against §8.
+- **Sampling:** weights are drawn from a symmetric `Dirichlet(1, …, 1)`, the uniform
+  distribution on the long-only simplex, with `numpy.random.default_rng(seed)`. Every draw
+  is positive and sums to 1, and is still validated.
+- **Parameters:** default 50,000 portfolios and seed 42 (`APP_MONTE_CARLO_SIMULATIONS`,
+  `APP_RANDOM_SEED`). The API accepts 100–200,000 portfolios
+  (`APP_MAX_MONTE_CARLO_SIMULATIONS`) and seeds 0–2³²−1. The same dataset, count and seed
+  reproduce identical results, which is checked on every run.
+- **Inputs:** `mu` and `Σ` come from Phase 3 on the common sample. Σ must pass the
+  symmetry and PSD checks, otherwise the simulation stops; it is never repaired. CAPM
+  returns are **not** substituted for `mu`.
+- **Outputs:**
+  - All portfolios (id, 8 weights, return, volatility, Sharpe) are written to
+    `data/processed/simulations/mc_n<N>_seed<S>.csv.gz`, with a JSON file holding the
+    inputs and metadata.
+  - The API returns distribution summaries, the two candidates (minimum volatility and
+    maximum Sharpe), a deterministic plotting subsample (the first `scatter_points` draws,
+    which is unbiased because draws are i.i.d.), the frontier approximation, and the
+    validation checks.
+- **Monte Carlo frontier approximation:** the non-dominated sampled portfolios. A portfolio
+  is kept if no other sampled portfolio has volatility ≤ and return ≥ with one strict
+  inequality, using a return tolerance of 1e-12. This is **not** the exact efficient
+  frontier; Phase 6 computes that by constrained optimization.
+- **Limitations:**
+  - The candidates are the best of a finite sample, not global optima.
+  - Uniform sampling rarely reaches corners and edges of the simplex.
+  - Historical mean returns are noisy, and high-Sharpe portfolios are sensitive to them.
+  - The sample covariance is unshrunk.
+  - None of these results are forecasts.
 
 ## 8. Constrained optimization (Phase 6)
 

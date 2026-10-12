@@ -17,8 +17,11 @@ class ProfileDefinitionOut(ApiModel):
 
 
 class SimulationRequest(ApiModel):
-    n_portfolios: int = Field(default=50_000, gt=0, le=200_000)
-    seed: int | None = Field(default=None, ge=0, description="Defaults to the configured seed.")
+    n_portfolios: int = Field(default=50_000, ge=100, le=200_000)
+    seed: int = Field(default=42, ge=0, le=2**32 - 1, description="numpy default_rng seed")
+    scatter_points: int = Field(
+        default=2_000, ge=100, le=10_000, description="Portfolios returned for plotting"
+    )
 
 
 class OptimizationRequest(ApiModel):
@@ -48,13 +51,79 @@ class SimulatedPortfolio(PortfolioMetrics):
     weights: list[float] = Field(description="Weights in canonical asset order.")
 
 
+class CandidatePortfolio(ApiModel):
+    label: str = Field(description="min_volatility or max_sharpe (simulation candidates)")
+    portfolio_id: int
+    weights: list[AssetWeight]
+    expected_return: float
+    volatility: float
+    sharpe_ratio: float | None
+
+
+class Distribution(ApiModel):
+    min: float
+    p05: float
+    p25: float
+    median: float
+    p75: float
+    p95: float
+    max: float
+    mean: float
+    std: float
+
+
+class SimulationSummary(ApiModel):
+    expected_return: Distribution
+    volatility: Distribution
+    sharpe_ratio: Distribution
+    sharpe_undefined: int = Field(description="Portfolios with volatility below the floor")
+
+
+class PointSet(ApiModel):
+    """Columnar portfolio metrics for plotting."""
+
+    portfolio_ids: list[int]
+    expected_returns: list[float]
+    volatilities: list[float]
+    sharpe_ratios: list[float | None]
+
+
+class SimulationInputs(ApiModel):
+    asset_order: list[str]
+    expected_returns: dict[str, float]
+    expected_return_convention: str
+    covariance_convention: str
+    risk_free_rate: float
+    risk_free_convention: str
+    sample_start: str
+    sample_end: str
+    observations: int
+    dataset_generated_at: str
+
+
+class SimulationCheck(ApiModel):
+    name: str
+    status: str
+    detail: str
+
+
 class SimulationResponse(ApiModel):
+    status: str = Field(description="PASS, PASS_WITH_WARNINGS or FAILED")
+    simulation_id: str
     n_portfolios: int
     seed: int
-    asset_order: list[str]
-    risk_free_rate: float
-    portfolios: list[SimulatedPortfolio]
-    frontier: list[PortfolioMetrics]
+    method: str
+    inputs: SimulationInputs
+    summary: SimulationSummary
+    candidates: list[CandidatePortfolio]
+    scatter: PointSet
+    scatter_selection: str
+    frontier: PointSet
+    frontier_label: str
+    frontier_criterion: str
+    checks: list[SimulationCheck]
+    warnings: list[str]
+    output_files: dict[str, str]
 
 
 class OptimizationResponse(ApiModel):

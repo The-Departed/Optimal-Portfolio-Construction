@@ -21,6 +21,7 @@
 
   /* Chart tokens (validated with the dataviz palette checker, light and dark). */
   --color-chart-1: #2a78d6;
+  --color-chart-2: #eb6834;
   --color-grid: #e7e6e2;
   --color-div-pos: #2a78d6;
   --color-div-neg: #d6453a;
@@ -43,6 +44,7 @@
     --color-negative: #f87171;
     --color-negative-soft: #331717;
     --color-chart-1: #3987e5;
+    --color-chart-2: #d95926;
     --color-grid: #2c2c2a;
     --color-div-pos: #3987e5;
     --color-div-neg: #e5584c;

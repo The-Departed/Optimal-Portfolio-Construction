@@ -6,8 +6,8 @@ equities, a government-bond ETF and a gold ETF. The portfolio work uses **Modern
 Theory**, **Monte Carlo simulation** and **constrained numerical optimization** for three
 investor profiles (conservative, balanced, growth-oriented).
 
-> **Status: Phase 3 (descriptive analytics) complete.** Validated dataset and analytics
-> are `PASS_WITH_WARNINGS`. No CAPM or portfolio results have been computed yet.
+> **Status: Phases 4–5 (CAPM and Monte Carlo simulation) complete.** Constrained
+> optimization for the investor profiles is Phase 6 and not yet implemented.
 > See [docs/implementation_plan.md](docs/implementation_plan.md) and
 > [data/reports/data_quality_report.md](data/reports/data_quality_report.md).
 
@@ -48,7 +48,14 @@ Then compute the descriptive analytics (returns, statistics, correlation and cov
 uv run python -m scripts.run_analytics       # writes data/processed/{returns,metadata}/…
 ```
 
-The API computes the same results on demand; the script persists them. Rerunning the
+Then CAPM and the Monte Carlo simulation:
+
+```bash
+uv run python -m scripts.run_capm                                  # data/processed/metadata/capm_*
+uv run python -m scripts.run_simulation --n-portfolios 50000 --seed 42   # data/processed/simulations/
+```
+
+The API computes the same results on demand; the scripts persist them. Rerunning the
 pipeline reuses the immutable raw snapshots. Use `--refresh` to download new snapshots,
 or `--offline` to rebuild without the network. The data-quality report is written to
 `data/reports/`.

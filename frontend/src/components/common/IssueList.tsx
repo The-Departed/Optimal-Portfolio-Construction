@@ -1,5 +1,5 @@
 import { cn } from "@/lib/cn";
-import type { Tone } from "@/features/dashboard/status";
+type Tone = "neutral" | "positive" | "warning" | "negative";
 
 const TONE: Record<Tone, string> = {
   neutral: "border-border",

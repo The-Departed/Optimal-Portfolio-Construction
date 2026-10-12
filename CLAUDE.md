@@ -10,7 +10,7 @@ G-Sec ETF, gold ETF) for conservative (min-vol), balanced (max-Sharpe) and growt
 (max-return s.t. user σ_max) profiles. The classical models are the core. Do not
 substitute ML.
 
-**Current phase: 3 complete (descriptive analytics; Phase 2 approval items in docs/implementation_plan.md). Work proceeds strictly phase by phase**
+**Current phase: 5 complete (CAPM + Monte Carlo; approval items in docs/implementation_plan.md). Work proceeds strictly phase by phase**
 (see `docs/implementation_plan.md`). Do not start a later phase unless asked.
 
 ## Commands
@@ -23,6 +23,7 @@ Backend (run from `backend/`; uv manages Python 3.12 and the venv):
 - `uv run ruff check . && uv run ruff format .`: lint and format
 - `uv run python -m scripts.download_datasets [--refresh|--offline|--strict]`: data pipeline (exit 1 = BLOCKED)
 - `uv run python -m scripts.run_analytics`: persist Phase 3 analytics (run after the pipeline; exit 1 = unavailable or FAILED)
+- `uv run python -m scripts.run_capm` / `uv run python -m scripts.run_simulation [--n-portfolios N --seed S]`: persist Phase 4/5 outputs
 - `uv run pytest --run-online tests/online`: optional live-source smoke tests (the default suite is offline)
 
 Frontend (run from `frontend/`):
@@ -44,6 +45,8 @@ Both: `./scripts/dev.sh`
 - Synthetic fixtures (`tests/fixtures/synthetic.py`) are for tests only. Never write them to `data/`.
 - Analytics run only on the Phase 2 common sample via `ProcessedDataLoader`; never fill gaps or mix pairwise windows. One return formula: `app/analytics/returns.py` (the pipeline reuses it). Never pass yields through it.
 - Never "fix" a non-PSD covariance matrix; report it via `diagnose()` and ask first.
+- CAPM, Sharpe and simulation inputs come from `app/services/market_inputs.py` only (one risk-free accrual, one `mu`, one Σ). All annualization is arithmetic ×252; Jensen's alpha must equal 252 × intercept.
+- Monte Carlo candidates are "simulation candidates", never "optimal"; the frontier filter is a "Monte Carlo approximation".
 
 ## Backend architecture
 

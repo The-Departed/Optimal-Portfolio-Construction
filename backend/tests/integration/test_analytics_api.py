@@ -125,7 +125,7 @@ def test_distribution_and_risk_free(api: TestClient) -> None:
     )
     rf = api.get("/api/v1/analytics/risk-free").json()
     assert rf["profile"]["units"] == "percent per annum"
-    assert rf["profile"]["conversion_status"] == "pending_approval"
+    assert rf["profile"]["conversion_status"] == "adopted_pending_approval"
     assert all(5 < o["implicit_yield_pct"] < 8 for o in rf["observations"])
 
 

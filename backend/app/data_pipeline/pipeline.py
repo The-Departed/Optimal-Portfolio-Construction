@@ -464,6 +464,8 @@ class DataPipeline:
             s.processed_dir / "returns",
             s.processed_dir / "risk_free",
             s.processed_dir / "metadata",
+            # Derived Phase 4/5 outputs become stale when the dataset is rebuilt.
+            s.processed_dir / "simulations",
         ):
             if sub.exists():
                 shutil.rmtree(sub)

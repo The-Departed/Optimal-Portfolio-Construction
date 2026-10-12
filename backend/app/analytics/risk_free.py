@@ -69,6 +69,7 @@ def profile_risk_free(
     study_start: pd.Timestamp,
     proposed_conversion: str,
     limitations: tuple[str, ...] = (),
+    conversion_status: str = "pending_approval",
 ) -> RiskFreeProfile:
     """Describe the native-frequency auction series.
 
@@ -100,7 +101,68 @@ def profile_risk_free(
         min_yield_pct=float(values[in_period].min()),
         max_yield_pct=float(values[in_period].max()),
         mean_yield_pct=float(values[in_period].mean()),
-        conversion_status="pending_approval",
+        conversion_status=conversion_status,
         proposed_conversion=proposed_conversion,
         limitations=limitations,
     )
+
+
+class RiskFreeAlignmentError(ValueError):
+    """The yield series cannot support a risk-free return for some interval."""
+
+
+def accrued_risk_free(
+    interval_starts: pd.DatetimeIndex,
+    interval_ends: pd.DatetimeIndex,
+    auctions: pd.DataFrame,
+    *,
+    day_count_basis: int = 365,
+    max_staleness_days: int = 35,
+) -> pd.DataFrame:
+    """Risk-free return for each return interval (start, end].
+
+    Convention (methodology §4): use the most recent auction yield with
+    ``auction_date <= start`` (information available when the interval begins) and
+    accrue it with simple interest on the source's actual/365 basis:
+
+        rf = yield_pct / 100 * calendar_days(start, end) / day_count_basis
+
+    The published yield is carried forward between weekly auctions; no daily yield
+    observation is created. Raises if an interval has no prior auction or the latest
+    auction is older than ``max_staleness_days``.
+    """
+    if len(interval_starts) != len(interval_ends):
+        raise RiskFreeAlignmentError("interval starts and ends differ in length")
+    if (interval_ends <= interval_starts).any():
+        raise RiskFreeAlignmentError("every interval must end after it starts")
+    obs = auctions.sort_values("auction_date")[["auction_date", "implicit_yield_pct"]]
+    if obs["implicit_yield_pct"].isna().any():
+        raise RiskFreeAlignmentError("yield observations contain missing values")
+    left = pd.DataFrame({"start": interval_starts, "end": interval_ends})
+    joined = pd.merge_asof(
+        left, obs, left_on="start", right_on="auction_date", direction="backward"
+    )
+    if joined["auction_date"].isna().any():
+        first = joined.loc[joined["auction_date"].isna(), "start"].iloc[0]
+        raise RiskFreeAlignmentError(f"no auction on or before {first.date()}")
+    staleness = (joined["start"] - joined["auction_date"]).dt.days
+    if (staleness > max_staleness_days).any():
+        worst = joined.loc[staleness.idxmax()]
+        raise RiskFreeAlignmentError(
+            f"latest auction before {worst['start'].date()} is {int(staleness.max())} days old"
+        )
+    days = (joined["end"] - joined["start"]).dt.days
+    out = pd.DataFrame(
+        {
+            "rf": joined["implicit_yield_pct"].to_numpy()
+            / 100.0
+            * days.to_numpy()
+            / day_count_basis,
+            "yield_pct": joined["implicit_yield_pct"].to_numpy(),
+            "auction_date": joined["auction_date"].to_numpy(),
+            "calendar_days": days.to_numpy(),
+            "staleness_days": staleness.to_numpy(),
+        },
+        index=pd.DatetimeIndex(interval_ends, name="date"),
+    )
+    return out

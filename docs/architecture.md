@@ -74,8 +74,8 @@ responses, so analysis endpoints never return fabricated "successful" results.
 | GET | `/api/v1/analytics/returns?series=…&start=YYYY-MM-DD&end=…` | 3 | Daily returns (columnar) and `sessions_spanned` |
 | GET | `/api/v1/analytics/distribution?series=X&sample=…&bins=5..200` | 3 | Histogram computed by the backend |
 | GET | `/api/v1/analytics/risk-free` | 3 | Native weekly yields and inspection profile (no conversion) |
-| GET | `/api/v1/capm/summary` | 4 | Reserved: 503 / 501 |
-| POST | `/api/v1/portfolio/simulate` | 5 | Reserved: 422 / 503 / 501 |
+| GET | `/api/v1/capm/summary?equities=…` | 4 | CAPM for the six equities: beta, CAPM E(R), Jensen's alpha, diagnostics, warnings |
+| POST | `/api/v1/portfolio/simulate` | 5 | Body `{n_portfolios, seed, scatter_points}`; candidates, summaries, scatter, frontier approximation, checks |
 | POST | `/api/v1/portfolio/optimize` | 6 | Reserved: 422 / 503 / 501 |
 
 Interactive OpenAPI docs are served at `http://localhost:8000/docs`.
@@ -96,6 +96,22 @@ ProcessedDataLoader (app/data) ──► compute_analytics (app/services) ──
   dataset returns 503 `DATA_NOT_READY` with the failing file named.
 - The frontend's `/analytics` page (lazy-loaded with Recharts) only formats values; the
   histogram bins are computed by the backend.
+
+## CAPM and Monte Carlo (Phases 4–5)
+
+```
+AnalyticsService.result() ─► market_inputs.build ─► CapmService ─► analytics.capm
+   (Phase 3, cached)          (rf accrual, mu, Σ)  └► simulation_service ─► analytics.monte_carlo
+                                                                          analytics.efficient_frontier
+```
+
+- `app/services/market_inputs.py` builds the shared inputs once per dataset version: the
+  per-interval risk-free series, annualized `R_f`, `mu`, `Σ` and the market returns.
+- The simulation is synchronous: about 15 ms of NumPy for 50,000 portfolios, plus writing
+  the 5 MB compressed CSV on the first run. Results are cached per (dataset, n, seed) in a
+  small in-process LRU, and routes run in FastAPI's thread pool.
+- The frontend routes `/capm` and `/portfolio` are lazy-loaded; React only formats values
+  and draws backend results.
 
 ## Data pipeline (Phase 2)
 

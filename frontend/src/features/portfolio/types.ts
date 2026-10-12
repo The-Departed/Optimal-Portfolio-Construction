@@ -12,8 +12,9 @@ export interface ProfileDefinition {
 }
 
 export interface SimulationRequest {
-  n_portfolios?: number;
-  seed?: number;
+  n_portfolios: number;
+  seed: number;
+  scatter_points?: number;
 }
 
 export interface OptimizationRequest {
@@ -31,13 +32,62 @@ export interface SimulatedPortfolio extends PortfolioMetrics {
   weights: number[];
 }
 
+export interface CandidatePortfolio {
+  label: "min_volatility" | "max_sharpe";
+  portfolio_id: number;
+  weights: AssetWeight[];
+  expected_return: number;
+  volatility: number;
+  sharpe_ratio: number | null;
+}
+
+export interface Distribution {
+  min: number;
+  p05: number;
+  p25: number;
+  median: number;
+  p75: number;
+  p95: number;
+  max: number;
+  mean: number;
+  std: number;
+}
+
+export interface PointSet {
+  portfolio_ids: number[];
+  expected_returns: number[];
+  volatilities: number[];
+  sharpe_ratios: (number | null)[];
+}
+
 export interface SimulationResponse {
+  status: "PASS" | "PASS_WITH_WARNINGS" | "FAILED";
+  simulation_id: string;
   n_portfolios: number;
   seed: number;
-  asset_order: string[];
-  risk_free_rate: number;
-  portfolios: SimulatedPortfolio[];
-  frontier: PortfolioMetrics[];
+  method: string;
+  inputs: {
+    asset_order: string[];
+    expected_returns: Record<string, number>;
+    expected_return_convention: string;
+    covariance_convention: string;
+    risk_free_rate: number;
+    risk_free_convention: string;
+    sample_start: string;
+    sample_end: string;
+    observations: number;
+    dataset_generated_at: string;
+  };
+  summary: { expected_return: Distribution; volatility: Distribution; sharpe_ratio: Distribution; sharpe_undefined: number };
+  candidates: CandidatePortfolio[];
+  scatter: PointSet;
+  scatter_selection: string;
+  frontier: PointSet;
+  frontier_label: string;
+  frontier_criterion: string;
+  checks: { name: string; status: "pass" | "warn" | "fail"; detail: string }[];
+  warnings: string[];
+  output_files: Record<string, string>;
 }
 
 export interface OptimizationResponse {

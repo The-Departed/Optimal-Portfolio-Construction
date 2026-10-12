@@ -1,9 +1,25 @@
-import { Card } from "@/components/common/Card";
+import { ErrorAlert } from "@/components/common/ErrorAlert";
+import { LoadingState } from "@/components/common/LoadingState";
 import { PageHeader } from "@/components/common/PageHeader";
 import { RequireData } from "@/components/common/RequireData";
-import { ChartFrame } from "@/components/charts/ChartFrame";
 import { CapmMethodology } from "@/features/capm/components/CapmMethodology";
-import { CapmResults } from "@/features/capm/components/CapmResults";
+import { CapmOverview } from "@/features/capm/components/CapmOverview";
+import { CapmReturnChart } from "@/features/capm/components/CapmReturnChart";
+import { CapmTable } from "@/features/capm/components/CapmTable";
+import { useCapmSummary } from "@/features/capm/hooks/useCapmSummary";
+
+function CapmContent() {
+  const { data, isPending, error } = useCapmSummary();
+  if (isPending) return <LoadingState label="Estimating CAPM regressions…" />;
+  if (error) return <ErrorAlert title="CAPM analysis unavailable" error={error} />;
+  return (
+    <div className="grid grid-cols-1 gap-6">
+      <CapmOverview data={data} />
+      <CapmTable data={data} />
+      <CapmReturnChart data={data} />
+    </div>
+  );
+}
 
 export function CapmPage() {
   return (
@@ -15,21 +31,9 @@ export function CapmPage() {
       />
       <div className="grid grid-cols-1 gap-6">
         <CapmMethodology />
-        <Card title="Equity results" description="Descriptive statistics and CAPM estimates per equity.">
-          <RequireData>
-            <CapmResults />
-          </RequireData>
-        </Card>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ChartFrame
-            title="Historical vs CAPM-implied return"
-            description="Annualized realized return against the CAPM expectation for each equity."
-          />
-          <ChartFrame
-            title="Security characteristic line"
-            description="Equity excess returns regressed on market excess returns."
-          />
-        </div>
+        <RequireData>
+          <CapmContent />
+        </RequireData>
       </div>
     </>
   );

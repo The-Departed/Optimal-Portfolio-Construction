@@ -41,8 +41,8 @@ RETURN_TOLERANCE = 1e-12
 _SOURCE_KEYS = ("portfolio", "benchmark", "prices/", "risk_free/", "return_intervals")
 RF_PROPOSED_CONVERSION = (
     "Per return interval (t-1, t]: use the latest auction yield with auction date <= t-1 "
-    "(as-of join), accrued as rf_t = y/100 * calendar_days(t-1, t) / 365. Not applied in "
-    "Phase 3; awaiting approval."
+    "(as-of join), accrued as rf_t = y/100 * calendar_days(t-1, t) / 365. Applied by the "
+    "CAPM (Phase 4) and Sharpe-ratio (Phase 5) calculations; awaiting formal approval."
 )
 
 
@@ -211,9 +211,11 @@ def compute_analytics(dataset: ValidatedDataset, conventions: Conventions) -> An
             units=info.units,
             study_start=prices.index[0],
             proposed_conversion=RF_PROPOSED_CONVERSION,
+            conversion_status="adopted_pending_approval",
             limitations=(
                 "Weekly primary-auction yields, not daily secondary-market yields.",
-                "No daily risk-free series is derived in Phase 3; the conversion awaits approval.",
+                "Descriptive analytics use no risk-free rate; CAPM and Sharpe ratios apply the "
+                "as-of accrual convention, which awaits formal approval.",
             ),
         )
         checks.append(
@@ -221,7 +223,7 @@ def compute_analytics(dataset: ValidatedDataset, conventions: Conventions) -> An
                 "risk_free_conversion",
                 "warn",
                 f"{rf_profile.frequency} {rf_profile.units} series inspected; "
-                "daily conversion pending approval",
+                "conversion adopted for CAPM/Sharpe, formal approval pending",
             )
         )
     except UnsupportedYieldConventionError as exc:

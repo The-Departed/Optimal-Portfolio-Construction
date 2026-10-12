@@ -74,6 +74,17 @@ pipeline run deletes them, because they would be stale; rerun the analytics afte
 
 All values are decimals at full precision; rounding happens only in the UI.
 
+### Phase 4–5 outputs
+
+| File | Written by | Contents |
+|---|---|---|
+| `metadata/capm_results.csv` | `scripts.run_capm` | One row per equity: status, sample, historical mean and CAGR, volatility, beta, CAPM E(R), Jensen's alpha, annualized intercept, R², and every diagnostic |
+| `metadata/capm_summary.json` | `scripts.run_capm` | The full `/capm/summary` response (market, risk-free, definitions, warnings) |
+| `simulations/mc_n<N>_seed<S>.csv.gz` | API or `scripts.run_simulation` | Every simulated portfolio: `portfolio_id`, `w_<ASSET>` × 8, `expected_return`, `volatility`, `sharpe_ratio` |
+| `simulations/mc_n<N>_seed<S>.json` | API or `scripts.run_simulation` | Inputs (mu, Σ, R_f, conventions), seed, method, dataset timestamp |
+
+A Phase 2 pipeline run clears these directories, because the files would be stale.
+
 ### `data/reports/`
 
 `data_quality_report.md` (human-readable), `validation_summary.json`,
